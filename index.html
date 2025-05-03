@@ -4,115 +4,107 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mandated Top Society</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Pacifico&display=swap" rel="stylesheet" />
+
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', sans-serif;
+    /* -------- Core Palette -------- */
+    :root {
+      --blue-light: #dbeafe;
+      --blue-dark: #1e3a8a;
+      --text: #111827;
+      --white: #ffffff;
+      --radius: 1rem;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
 
-    body {
-      background-color: #f8f9fa;
-      color: #333;
-      line-height: 1.6;
+    /* -------- Reset -------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Montserrat", sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+    img { max-width: 100%; display: block; border-radius: var(--radius); }
+
+    /* -------- Layout Helpers -------- */
+    section { padding: 5rem 1.25rem; text-align: center; }
+    h1, h2 { font-family: "Pacifico", cursive; color: var(--blue-dark); }
+    h1 { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    h2 { font-size: 1.75rem; margin-bottom: 1.5rem; }
+    .btn { display: inline-block; margin-top: 1.5rem; background: var(--blue-dark); color: var(--white); padding: 0.65rem 1.5rem; border-radius: 2rem; font-weight: 700; box-shadow: var(--shadow); text-decoration: none; }
+    .btn:hover { opacity: 0.9; }
+
+    /* -------- Hero -------- */
+    /* Animated sunset gradient using pure CSS */
+    #hero {
+      position: relative;
+      color: var(--white);
+      background: linear-gradient(45deg, #ff6b6b, #ff9068, #ffd670, #6bd4ff, #1e3a8a);
+      background-size: 400% 400%;
+      animation: sunset 18s ease infinite;
     }
 
-    header {
-      background: #111;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
+    @keyframes sunset {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    nav {
-      background: #222;
-      display: flex;
-      justify-content: center;
-      padding: 10px;
+    /* Dark overlay for better contrast */
+    #hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
     }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
+    #hero-content {
+      position: relative; /* keep above overlay */
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+    /* -------- Products -------- */
+    #products { background: var(--white); }
+    .grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); max-width: 1000px; margin: 0 auto; }
+    .card { background: var(--blue-light); padding: 1rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card h3 { margin-top: 0.75rem; font-family: "Pacifico", cursive; color: var(--text); }
 
-    .hero {
-      padding: 100px 20px;
-      background: linear-gradient(to right, #343a40, #495057);
-      color: white;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 20px;
-    }
-
-    .content {
-      padding: 40px 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .footer {
-      background: #222;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-    }
+    /* -------- Footer -------- */
+    footer { background: var(--blue-dark); color: var(--white); padding: 1.5rem; text-align: center; font-size: 0.9rem; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Mandated Top Society</h1>
-    <p>Where vision meets execution</p>
-  </header>
-
-  <nav>
-    <a href="#about">About</a>
-    <a href="#vision">Vision</a>
-    <a href="#contact">Contact</a>
-  </nav>
-
-  <section class="hero">
-    <h1>Welcome to Mandated Top Society</h1>
-    <p>Building a new standard of excellence through innovation and leadership.</p>
+  <!-- Hero -->
+  <section id="hero">
+    <div id="hero-content">
+      <h1>Mandated Top Society</h1>
+      <p>Bucket hats, cold beers, and sunny days.</p>
+      <a href="#products" class="btn">Shop the Hats</a>
+    </div>
   </section>
 
-  <section class="content" id="about">
-    <h2>About Us</h2>
-    <p>
-      Mandated Top Society is a collective of forward-thinking individuals committed to driving change and making an impact. We believe in leadership, creativity, and building for the future.
-    </p>
+  <!-- Products -->
+  <section id="products">
+    <h2>The Line‑Up</h2>
+    <div class="grid">
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1556909190-ef091b17e1fe?auto=format&fit=crop&w=400&q=80" alt="OG Pink Hat">
+        <h3>OG Pink</h3>
+      </article>
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1593032465174-14d4a1cbdb8a?auto=format&fit=crop&w=400&q=80" alt="Cloud White Hat">
+        <h3>Cloud White</h3>
+      </article>
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1603889586786-a8e95b5b4cb2?auto=format&fit=crop&w=400&q=80" alt="Sun-Kissed Limited Hat">
+        <h3>Sun‑Kissed Limited</h3>
+      </article>
+    </div>
   </section>
 
-  <section class="content" id="vision">
-    <h2>Our Vision</h2>
-    <p>
-      To create a powerful ecosystem where innovation, collaboration, and integrity form the foundation of tomorrow’s solutions.
-    </p>
-  </section>
-
-  <section class="content" id="contact">
-    <h2>Contact</h2>
-    <p>Email us at <a href="mailto:contact@mandatedtopsociety.com">contact@mandatedtopsociety.com</a></p>
-  </section>
-
-  <footer class="footer">
-    <p>&copy; 2025 Mandated Top Society. All rights reserved.</p>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Mandated Top Society
   </footer>
 </body>
 </html>
