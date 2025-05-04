@@ -1,147 +1,214 @@
 <!DOCTYPE html>
 <html lang="en-AU" data-theme="light">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Try On – Mandated Top Society</title>
-<link rel="icon" href="/images/mainlogo.png" type="image/png">
-<style>
-/* ---------- CSS Variables ---------- */
-:root{--bg:#fafafa;--text:#1f1f1f;--accent:#5EC3FF;--bg-alt:#ffffff;}
-html[data-theme="dark"]{--bg:#1A1A1A;--text:#e5e5e5;--accent:#4FA4D9;--bg-alt:#2b2b2b;}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Try On Our Hat – Mandated Top Society</title>
+  <link rel="icon" href="/images/mainlogo.png" type="image/png">
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --bg: #fafafa; --text: #1f1f1f; --accent: #5EC3FF; --bg-alt: #ffffff;
+    }
+    html[data-theme="dark"] {
+      --bg: #1A1A1A; --text: #e5e5e5; --accent: #4FA4D9; --bg-alt: #2b2b2b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.45;
+    }
+    img, video { max-width: 100%; display: block }
 
-/* ---------- Base ---------- */
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
-img,video{max-width:100%;display:block}
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; height: 64px; padding: 0 .75rem;
+      background: var(--bg-alt); display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(0,0,0,.05); z-index: 1000
+    }
+    #burger { font-size: 1.75rem; border: none; background: none; cursor: pointer; flex: 0 0 44px }
+    #banner { height: 48px; width: auto; object-fit: contain; max-width: 40vw; flex-grow: 1 }
+    #modeToggle {
+      border: 1px solid var(--accent); background: none; padding: .35rem .7rem;
+      border-radius: 4px; color: var(--text); cursor: pointer; white-space: nowrap
+    }
+    @media(max-width:420px) {
+      #banner { height: 42px; max-width: 34vw }
+      #modeToggle { font-size: .85rem; padding: .3rem .6rem }
+    }
 
-/* ---------- Header ---------- */
-header{
-	position:fixed;top:0;left:0;width:100%;height:64px;padding:0 .75rem;
-	background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;
-	border-bottom:1px solid rgba(0,0,0,.05);z-index:1000
-}
-#burger{font-size:1.75rem;border:none;background:none;cursor:pointer;line-height:1;flex:0 0 44px}
-#banner{height:48px;width:auto;object-fit:contain;max-width:40vw;flex-shrink:1;flex-grow:1}
-#modeToggle{border:1px solid var(--accent);background:none;padding:.35rem .7rem;border-radius:4px;font:inherit;color:var(--text);cursor:pointer;white-space:nowrap}
-@media(max-width:420px){#banner{height:42px;max-width:34vw}#modeToggle{font-size:.85rem;padding:.3rem .6rem}}
-@media(max-width:340px){#banner{height:38px;max-width:30vw}}
+    #sidebar {
+      position: fixed; top: 0; left: 0; height: 100%; width: 250px;
+      padding: 80px 1.25rem 1.5rem; background: var(--bg-alt);
+      transform: translateX(-100%); transition: .3s transform ease; z-index: 1100
+    }
+    #sidebar.open { transform: none }
+    #sidebar a {
+      display: block; margin-bottom: 1rem; text-decoration: none; color: var(--text); font-size: 1.1rem
+    }
+    #overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.2); backdrop-filter: blur(1px); display: none; z-index: 1050
+    }
+    #overlay.active { display: block }
 
-/* ---------- Sidebar ---------- */
-#sidebar{
-	position:fixed;top:0;left:0;height:100%;width:250px;padding:80px 1.25rem 1.5rem;
-	background:var(--bg-alt);transform:translateX(-100%);transition:.3s transform ease;z-index:1100
-}
-#sidebar.open{transform:none}
-#sidebar a{display:block;margin-bottom:1rem;text-decoration:none;color:var(--text);font-size:1.1rem}
-#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.2);backdrop-filter:blur(1px);display:none;z-index:1050}
-#overlay.active{display:block}
+    main {
+      padding: 96px 1rem 120px; max-width: 1000px; margin: auto; text-align: center;
+    }
+    h1 {
+      font-size: 2.3rem; font-weight: 700; margin-block: 0.35em 1em; line-height: 1.35;
+    }
+    .button {
+      display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+      padding: .65rem 1.4rem; border-radius: 4px; font-weight: 600; transition: .2s opacity
+    }
+    .button:hover, .button:focus { opacity: .85 }
 
-/* ---------- Main ---------- */
-main{padding:96px 1rem 120px;max-width:1200px;margin:auto}
-h1{font-size:2.2rem;font-weight:700;text-align:center;margin-bottom:2rem}
-#arPlaceholder{
-	width:100%;max-width:700px;height:420px;margin:0 auto;border:2px dashed var(--accent);
-	display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-	background:var(--bg-alt);color:var(--text)
-}
-.button{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:.65rem 1.4rem;border-radius:4px;font-weight:600;transition:.2s opacity}
-.button:hover,.button:focus{opacity:.85}
+    model-viewer {
+      width: 100%; max-width: 600px; height: 500px; margin: 2rem auto;
+      background: var(--bg-alt); border: 1px solid rgba(0,0,0,.05); border-radius: 8px;
+    }
 
-/* ---------- Hat Animation ---------- */
-@keyframes drift{from{transform:translateX(0) translateY(0) rotate(0deg)}to{transform:translateX(-110vw) translateY(20px) rotate(var(--spinEnd))}}
-.floater{position:fixed;top:calc(10% + var(--randY));right:-120px;width:100px;pointer-events:none;animation:drift var(--dur) linear forwards;}
+    @keyframes drift {
+      from { transform: translateX(0) translateY(0) rotate(0deg) }
+      to { transform: translateX(-110vw) translateY(20px) rotate(var(--spinEnd)) }
+    }
+    .floater {
+      position: fixed; top: calc(10% + var(--randY)); right: -120px; width: 100px; pointer-events: none;
+      animation: drift var(--dur) linear forwards;
+    }
 
-/* ---------- MTS Radio ---------- */
-#audioBar{
-	position:fixed;bottom:0;left:0;width:100%;padding:.5rem 1rem;background:var(--bg-alt);
-	display:flex;align-items:center;justify-content:center;gap:1rem;border-top:1px solid rgba(0,0,0,.05)
-}
-#audioBar button,#audioBar input{font:inherit}
-#audioBar button{border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text)}
-#trackLabel{min-width:140px;font-size:.9rem;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* ---------- Accessibility ---------- */
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media(hover:hover){#sidebar a:hover{text-decoration:underline}}
-</style>
+    #audioBar {
+      position: fixed; bottom: 0; left: 0; width: 100%; padding: .5rem 1rem;
+      background: var(--bg-alt); display: flex; align-items: center; justify-content: center;
+      gap: 1rem; border-top: 1px solid rgba(0,0,0,.05)
+    }
+    #audioBar button, #audioBar input { font: inherit }
+    #audioBar button {
+      border: none; background: none; cursor: pointer; font-size: 1.3rem; color: var(--text)
+    }
+    #trackLabel {
+      min-width: 140px; font-size: .9rem; text-align: center; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 <header>
-	<button id="burger" aria-label="Menu">☰</button>
-	<img id="banner" src="/images/bannerlogo.png" alt="Mandated Top Society">
-	<button id="modeToggle">Hungover Mode</button>
+  <button id="burger" aria-label="Menu">☰</button>
+  <img id="banner" src="/images/bannerlogo.png" alt="Mandated Top Society">
+  <button id="modeToggle">Hungover Mode</button>
 </header>
 
 <nav id="sidebar" aria-label="Site">
-	<a href="https://mandatedtopsociety.com">Home</a>
-	<a href="https://mandatedtopsociety.com/products">Products</a>
-	<a href="https://mandatedtopsociety.com/tryon">Try On</a>
-	<a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
+  <a href="https://mandatedtopsociety.com">Home</a>
+  <a href="https://mandatedtopsociety.com/products">Products</a>
+  <a href="https://mandatedtopsociety.com/tryon">Try On</a>
+  <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
 </nav>
 <div id="overlay"></div>
 
 <main>
-	<h1>Explore our MTS Bucket Hats:</h1>
-	<div id="arPlaceholder">AR try‑on experience coming soon…</div>
-	<p style="text-align:center;margin-top:2rem">
-		<a class="button" href="https://mandatedtopsociety.com/products">Back to Products</a>
-	</p>
+  <h1>Try On Our MTS Bucket Hat</h1>
+
+  <!-- 3D/VR Viewer -->
+  <model-viewer
+    src="/models/whitebuckethat.glb"
+    alt="OG White Bucket Hat"
+    auto-rotate
+    camera-controls
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    shadow-intensity="1"
+    exposure="1"
+  ></model-viewer>
+
+  <p><a class="button" href="https://mandatedtopsociety.com/products">View All Hats</a></p>
 </main>
 
 <div id="audioBar">
-	<button id="prev" aria-label="Previous track">◀︎</button>
-	<button id="playPause" aria-label="Play" data-state="paused">▷</button>
-	<button id="next" aria-label="Next track">▶︎</button>
-	<span id="trackLabel">MTS Radio</span>
-	<input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+  <button id="prev" aria-label="Previous track">◀︎</button>
+  <button id="playPause" aria-label="Play" data-state="paused">▷</button>
+  <button id="next" aria-label="Next track">▶︎</button>
+  <span id="trackLabel">MTS Radio</span>
+  <input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
 </div>
 <audio id="audio" preload="none"></audio>
 
 <script>
-(()=>{'use strict';
-const $=s=>document.querySelector(s);
+(() => {
+  const $ = s => document.querySelector(s);
+  const root = document.documentElement;
 
-/* ---------- Theme Toggle ---------- */
-const root=document.documentElement;
-root.dataset.theme=localStorage.getItem('mts-theme')||'light';
-$('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
+  // Theme toggle
+  root.dataset.theme = localStorage.getItem('mts-theme') || 'light';
+  $('#modeToggle').onclick = () => {
+    const t = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = t;
+    localStorage.setItem('mts-theme', t);
+  };
 
-/* ---------- Sidebar ---------- */
-$('#burger').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('active')};
-$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('active')};
+  // Sidebar
+  $('#burger').onclick = () => { $('#sidebar').classList.add('open'); $('#overlay').classList.add('active') };
+  $('#overlay').onclick = () => { $('#sidebar').classList.remove('open'); $('#overlay').classList.remove('active') };
 
-/* ---------- Audio Player ---------- */
-const playlist=[{src:'/music/track1.mp3',title:'Track 1'},{src:'/music/track2.mp3',title:'Track 2'},{src:'/music/track3.mp3',title:'Track 3'}];
-const LS_TRACK='mts-track-idx',LS_TIME='mts-track-time',LS_PLAY='mts-track-playing';
-let current=parseInt(localStorage.getItem(LS_TRACK)||0,10)%playlist.length;
-const audio=$('#audio'),label=$('#trackLabel'),playBtn=$('#playPause');
-function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
-load(current);
-audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
-if(localStorage.getItem(LS_PLAY)==='1'){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
-playBtn.onclick=()=>{if(playBtn.dataset.state==='paused'){audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';}else{audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';}localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');};
-$('#prev').onclick=()=>{load(current-1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
-$('#next').onclick=()=>{load(current+1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
-audio.onended=()=>{load(current+1);audio.play()};
-$('#volume').oninput=e=>audio.volume=e.target.value;
-audio.ontimeupdate=()=>{if(!audio.paused){localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));localStorage.setItem(LS_TRACK,current);}};
-window.addEventListener('beforeunload',()=>{localStorage.setItem(LS_TRACK,current);localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');});
+  // MTS Radio
+  const playlist = [
+    { src: '/music/track1.mp3', title: 'Track 1' },
+    { src: '/music/track2.mp3', title: 'Track 2' },
+    { src: '/music/track3.mp3', title: 'Track 3' }
+  ];
+  const LS_TRACK = 'mts-track-idx', LS_TIME = 'mts-track-time', LS_PLAY = 'mts-track-playing';
+  let current = parseInt(localStorage.getItem(LS_TRACK) || 0, 10) % playlist.length;
+  const audio = $('#audio'), label = $('#trackLabel'), playBtn = $('#playPause');
+  function load(i) {
+    current = (i + playlist.length) % playlist.length;
+    audio.src = playlist[current].src;
+    label.textContent = playlist[current].title;
+  }
+  load(current);
+  audio.currentTime = parseFloat(localStorage.getItem(LS_TIME) || 0);
+  if (localStorage.getItem(LS_PLAY) === '1') {
+    audio.play().catch(() => {});
+    playBtn.textContent = '❚❚';
+    playBtn.dataset.state = 'playing';
+  }
+  playBtn.onclick = () => {
+    if (playBtn.dataset.state === 'paused') {
+      audio.play(); playBtn.textContent = '❚❚'; playBtn.dataset.state = 'playing';
+    } else {
+      audio.pause(); playBtn.textContent = '▷'; playBtn.dataset.state = 'paused';
+    }
+    localStorage.setItem(LS_PLAY, playBtn.dataset.state === 'playing' ? '1' : '0');
+  };
+  $('#prev').onclick = () => { load(current - 1); audio.play(); playBtn.textContent = '❚❚'; playBtn.dataset.state = 'playing'; localStorage.setItem(LS_PLAY, '1') };
+  $('#next').onclick = () => { load(current + 1); audio.play(); playBtn.textContent = '❚❚'; playBtn.dataset.state = 'playing'; localStorage.setItem(LS_PLAY, '1') };
+  audio.onended = () => { load(current + 1); audio.play() };
+  $('#volume').oninput = e => audio.volume = e.target.value;
+  audio.ontimeupdate = () => {
+    if (!audio.paused) {
+      localStorage.setItem(LS_TIME, audio.currentTime.toFixed(1));
+      localStorage.setItem(LS_TRACK, current);
+    }
+  };
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem(LS_TRACK, current);
+    localStorage.setItem(LS_TIME, audio.currentTime.toFixed(1));
+    localStorage.setItem(LS_PLAY, playBtn.dataset.state === 'playing' ? '1' : '0');
+  });
 
-/* ---------- Floating Hats ---------- */
-const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
-let hatIndex=0;
-function spawnHat(){
-	const img=document.createElement('img');
-	img.src=hatImgs[hatIndex];hatIndex=(hatIndex+1)%hatImgs.length;
-	img.className='floater';
-	img.style.setProperty('--dur',`${8+Math.random()*8}s`);
-	img.style.setProperty('--randY',`${Math.random()*60}vh`);
-	img.style.setProperty('--spinEnd',`${Math.random()>0.5?'-':''}${720+Math.random()*720}deg`);
-	document.body.appendChild(img);
-	img.addEventListener('animationend',()=>img.remove());
-}
-setInterval(spawnHat,10000+Math.random()*5000); // 10–15 s
+  // Floating hats
+  const hatImgs = ['white', 'pink', 'blue', 'green'].map(c => `/images/${c}.png`);
+  let hatIndex = 0;
+  function spawnHat() {
+    const img = document.createElement('img');
+    img.src = hatImgs[hatIndex]; hatIndex = (hatIndex + 1) % hatImgs.length;
+    img.className = 'floater';
+    img.style.setProperty('--dur', `${8 + Math.random() * 8}s`);
+    img.style.setProperty('--randY', `${Math.random() * 60}vh`);
+    img.style.setProperty('--spinEnd', `${Math.random() > 0.5 ? '-' : ''}${720 + Math.random() * 720}deg`);
+    document.body.appendChild(img);
+    img.addEventListener('animationend', () => img.remove());
+  }
+  setInterval(spawnHat, 8000 + Math.random() * 4000);
 })();
 </script>
 </body>
