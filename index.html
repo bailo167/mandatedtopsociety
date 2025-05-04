@@ -105,7 +105,6 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 	<a href="https://mandatedtopsociety.com">Home</a>
 	<a href="https://mandatedtopsociety.com/products">Products</a>
 	<a href="https://mandatedtopsociety.com/tryon">Try On</a>
-	<a href="https://mandatedtopsociety.com/radio">MTS Radio</a>
 	<a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
 </nav>
 <div id="overlay"></div>
@@ -179,21 +178,43 @@ fetch('/api/insta').then(r=>r.json()).then(({data})=>{
 
 /* ---------- Audio Player ---------- */
 const playlist=[{src:'/music/track1.mp3',title:'Track 1'},{src:'/music/track2.mp3',title:'Track 2'},{src:'/music/track3.mp3',title:'Track 3'}];
-let current=Math.floor(Math.random()*playlist.length);
-const audio=$('#audio'),label=$('#trackLabel');
-function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title}
+const LS_TRACK='mts-track-idx',LS_TIME='mts-track-time',LS_PLAY='mts-track-playing';
+let current=parseInt(localStorage.getItem(LS_TRACK)||0,10)%playlist.length;
+const audio=$('#audio'),label=$('#trackLabel'),playBtn=$('#playPause');
+function load(i){
+	current=(i+playlist.length)%playlist.length;
+	audio.src=playlist[current].src;
+	label.textContent=playlist[current].title;
+}
 load(current);
-$('#playPause').onclick=()=>{audio.paused?(audio.play(),this.textContent='❚❚'):audio.pause(),this.textContent='▷'};
-$('#prev').onclick=()=>{load(current-1);audio.play()};
-$('#next').onclick=()=>{load(current+1);audio.play()};
+audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
+const wasPlaying=localStorage.getItem(LS_PLAY)==='1';
+if(wasPlaying){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
+
+playBtn.onclick=()=>{
+	if(playBtn.dataset.state==='paused'){
+		audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';
+	}else{
+		audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';
+	}
+	localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');
+};
+$('#prev').onclick=()=>{load(current-1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
+$('#next').onclick=()=>{load(current+1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
 audio.onended=()=>{load(current+1);audio.play()};
 $('#volume').oninput=e=>audio.volume=e.target.value;
+audio.ontimeupdate=()=>{if(!audio.paused){localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));localStorage.setItem(LS_TRACK,current);}};
+window.addEventListener('beforeunload',()=>{
+	localStorage.setItem(LS_TRACK,current);
+	localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));
+	localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');
+});
 
 /* ---------- Floating Hats ---------- */
 const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
 function spawnHat(){
 	const img=document.createElement('img');
-	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)]; // uniform random pick
+	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
 	img.className='floater';
 	img.style.setProperty('--dur',`${8+Math.random()*8}s`);
 	img.style.setProperty('--randY',`${Math.random()*60}vh`);
@@ -201,7 +222,7 @@ function spawnHat(){
 	document.body.appendChild(img);
 	img.addEventListener('animationend',()=>img.remove());
 }
-setInterval(spawnHat,10000+Math.random()*5000); // every 10‑15 s (≈ 2× previous rate)
+setInterval(spawnHat,10000+Math.random()*5000); // 10–15 s
 })();
 </script>
 </body>
