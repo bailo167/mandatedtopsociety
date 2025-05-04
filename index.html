@@ -150,10 +150,7 @@ const $=s=>document.querySelector(s);
 /* ---------- Theme Toggle ---------- */
 const root=document.documentElement;
 root.dataset.theme=localStorage.getItem('mts-theme')||'light';
-$('#modeToggle').onclick=()=>{
-	const t=root.dataset.theme==='dark'?'light':'dark';
-	root.dataset.theme=t;localStorage.setItem('mts-theme',t);
-};
+$('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
 
 /* ---------- Sidebar ---------- */
 $('#burger').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('active')};
@@ -181,22 +178,14 @@ const playlist=[{src:'/music/track1.mp3',title:'Track 1'},{src:'/music/track2.m
 const LS_TRACK='mts-track-idx',LS_TIME='mts-track-time',LS_PLAY='mts-track-playing';
 let current=parseInt(localStorage.getItem(LS_TRACK)||0,10)%playlist.length;
 const audio=$('#audio'),label=$('#trackLabel'),playBtn=$('#playPause');
-function load(i){
-	current=(i+playlist.length)%playlist.length;
-	audio.src=playlist[current].src;
-	label.textContent=playlist[current].title;
-}
+function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
 load(current);
 audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
-const wasPlaying=localStorage.getItem(LS_PLAY)==='1';
-if(wasPlaying){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
+if(localStorage.getItem(LS_PLAY)==='1'){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
 
 playBtn.onclick=()=>{
-	if(playBtn.dataset.state==='paused'){
-		audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';
-	}else{
-		audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';
-	}
+	if(playBtn.dataset.state==='paused'){audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
+	else{audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';}
 	localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');
 };
 $('#prev').onclick=()=>{load(current-1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
@@ -212,9 +201,11 @@ window.addEventListener('beforeunload',()=>{
 
 /* ---------- Floating Hats ---------- */
 const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
+let hatIndex=0;
 function spawnHat(){
 	const img=document.createElement('img');
-	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
+	img.src=hatImgs[hatIndex];
+	hatIndex=(hatIndex+1)%hatImgs.length;        /* white → pink → blue → green → repeat */
 	img.className='floater';
 	img.style.setProperty('--dur',`${8+Math.random()*8}s`);
 	img.style.setProperty('--randY',`${Math.random()*60}vh`);
