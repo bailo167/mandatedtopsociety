@@ -3,38 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AR Try‑On – White Hat</title>
-<style>
-body{margin:0;font-family:sans-serif;background:#fafafa;color:#1f1f1f;text-align:center}
-#start{margin:3rem auto;padding:.8rem 1.6rem;background:#5EC3FF;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer}
-mindar-face{width:100%;max-width:640px;height:640px;margin:1.5rem auto;display:none}
-.swatch{display:none}        /* no colour buttons for now */
-</style>
+<title>AR Try‑On – Debug Mode</title>
 
-<!-- 100 % CDN scripts (no login, no build) -->
+<!-- MindAR + A‑Frame (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face-aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+
+<style>
+body{margin:0;font-family:sans-serif;text-align:center;background:#fafafa}
+#startBtn{margin:3rem auto;padding:.8rem 1.6rem;background:#5EC3FF;color:#fff;
+          border:none;border-radius:6px;font-weight:600;cursor:pointer}
+mindar-face{width:100%;max-width:640px;height:640px;margin:1.5rem auto;display:none}
+</style>
 </head>
 <body>
 
-<h1 style="margin-top:1.5rem">Try On Our White Bucket Hat</h1>
+<h1 style="margin-top:1.5rem">Debug – White Bucket Hat AR</h1>
 
-<button id="start">Start camera</button>
+<button id="startBtn">Start camera</button>
 
-<!-- MindAR Face scene (hidden until user taps Start) -->
 <mindar-face id="ar" auto-start="false">
-  <a-scene mindar-face embedded color-space="sRGB" vr-mode-ui="enabled: false" renderer="precision: mediump; antialias: true">
-
-    <!-- GLB asset -->
+  <a-scene mindar-face embedded color-space="sRGB" vr-mode-ui="enabled: false"
+           renderer="precision: mediump; antialias: true">
     <a-assets>
-      <a-asset-item id="hatModel" src="/models/whitebuckethat.glb"></a-asset-item>
+      <a-asset-item id="hat" src="/models/whitebuckethat.glb"></a-asset-item>
     </a-assets>
 
-    <!-- Face anchor 168 = forehead / top of head -->
+    <!-- Anchor 168 = forehead / top‑of‑head -->
     <a-entity mindar-face-target="anchorIndex: 168">
-      <a-gltf-model src="#hatModel" position="0 0.15 0" scale="1 1 1"></a-gltf-model>
+      <a-gltf-model src="#hat" position="0 0.15 0" scale="1 1 1"></a-gltf-model>
     </a-entity>
 
     <a-camera active="false"></a-camera>
@@ -42,11 +41,18 @@ mindar-face{width:100%;max-width:640px;height:640px;margin:1.5rem auto;display:n
 </mindar-face>
 
 <script>
-document.getElementById("start").onclick = async () => {
+document.getElementById("startBtn").onclick = async () => {
   const ar = document.getElementById("ar");
-  document.getElementById("start").style.display = "none";
+  document.getElementById("startBtn").style.display = "none";
   ar.style.display = "block";
-  await ar.start();          // prompts for camera permission
+
+  try {
+    await ar.start();                 // prompts for camera permission
+    console.log("MindAR started successfully");
+  } catch (e) {
+    alert("AR failed: " + e.message);
+    console.error("MindAR runtime error:", e);
+  }
 };
 </script>
 </body>
