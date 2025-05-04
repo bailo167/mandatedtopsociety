@@ -49,10 +49,7 @@ section h2{font-size:1.8rem;margin-bottom:1.2rem;text-align:center}
 #productsGrid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 
 /* ---------- Hat Animation ---------- */
-@keyframes drift{
-	from{transform:translateX(0) translateY(0) rotate(0deg)}
-	to{transform:translateX(-110vw) translateY(20px) rotate(var(--spinEnd))}
-}
+@keyframes drift{from{transform:translateX(0) translateY(0) rotate(0deg)}to{transform:translateX(-110vw) translateY(20px) rotate(var(--spinEnd))}}
 .floater{position:fixed;top:calc(10% + var(--randY));right:-120px;width:100px;pointer-events:none;animation:drift var(--dur) linear forwards;}
 
 /* ---------- MTS Radio ---------- */
@@ -88,10 +85,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 	<h1>Explore our MTS Bucket Hats:</h1>
 	<section>
 		<div class="grid" id="productsGrid">
-			<img src="/images/white.png" alt="White hat">
-			<img src="/images/pink.png"  alt="Pink hat">
-			<img src="/images/blue.png"  alt="Blue hat">
-			<img src="/images/green.png" alt="Green hat">
+			<a href="/products/whitebuckethat"><img src="/images/white.png" alt="White bucket hat"></a>
+			<a href="/products/pinkbuckethat"><img src="/images/pink.png"  alt="Pink bucket hat"></a>
+			<a href="/products/bluebuckethat"><img src="/images/blue.png"  alt="Blue bucket hat"></a>
+			<a href="/products/greenbuckethat"><img src="/images/green.png" alt="Green bucket hat"></a>
 		</div>
 		<p style="text-align:center;margin-top:2.2rem">
 			<a class="button" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
@@ -112,23 +109,22 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 (()=>{'use strict';
 const $=s=>document.querySelector(s);
 
-/* ---------- Theme Toggle ---------- */
+/* Theme toggle */
 const root=document.documentElement;
 root.dataset.theme=localStorage.getItem('mts-theme')||'light';
 $('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
 
-/* ---------- Sidebar ---------- */
+/* Sidebar */
 $('#burger').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('active')};
 $('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('active')};
 
-/* ---------- Audio Player ---------- */
+/* Audio player */
 const playlist=[{src:'/music/track1.mp3',title:'Track 1'},{src:'/music/track2.mp3',title:'Track 2'},{src:'/music/track3.mp3',title:'Track 3'}];
 const LS_TRACK='mts-track-idx',LS_TIME='mts-track-time',LS_PLAY='mts-track-playing';
 let current=parseInt(localStorage.getItem(LS_TRACK)||0,10)%playlist.length;
 const audio=$('#audio'),label=$('#trackLabel'),playBtn=$('#playPause');
 function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
-load(current);
-audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
+load(current);audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
 if(localStorage.getItem(LS_PLAY)==='1'){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
 playBtn.onclick=()=>{if(playBtn.dataset.state==='paused'){audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';}else{audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';}localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');};
 $('#prev').onclick=()=>{load(current-1);audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';localStorage.setItem(LS_PLAY,'1')};
@@ -138,7 +134,7 @@ $('#volume').oninput=e=>audio.volume=e.target.value;
 audio.ontimeupdate=()=>{if(!audio.paused){localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));localStorage.setItem(LS_TRACK,current);}};
 window.addEventListener('beforeunload',()=>{localStorage.setItem(LS_TRACK,current);localStorage.setItem(LS_TIME,audio.currentTime.toFixed(1));localStorage.setItem(LS_PLAY,playBtn.dataset.state==='playing'?'1':'0');});
 
-/* ---------- Floating Hats ---------- */
+/* Floating hats */
 const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
 let hatIndex=0;
 function spawnHat(){
@@ -151,7 +147,7 @@ function spawnHat(){
 	document.body.appendChild(img);
 	img.addEventListener('animationend',()=>img.remove());
 }
-setInterval(spawnHat,10000+Math.random()*5000); // 10–15 s
+setInterval(spawnHat,10000+Math.random()*5000);
 })();
 </script>
 </body>
