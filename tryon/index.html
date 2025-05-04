@@ -1,59 +1,135 @@
 <!DOCTYPE html>
-<html lang="en-AU">
+<html lang="en-AU" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AR Try‑On – Debug Mode</title>
-
-<!-- MindAR + A‑Frame (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face-aframe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+<title>Try On – Coming Soon | Mandated Top Society</title>
+<link rel="icon" href="/images/mainlogo.png" type="image/png">
 
 <style>
-body{margin:0;font-family:sans-serif;text-align:center;background:#fafafa}
-#startBtn{margin:3rem auto;padding:.8rem 1.6rem;background:#5EC3FF;color:#fff;
-          border:none;border-radius:6px;font-weight:600;cursor:pointer}
-mindar-face{width:100%;max-width:640px;height:640px;margin:1.5rem auto;display:none}
+:root{--bg:#fafafa;--text:#1f1f1f;--accent:#5EC3FF;--bg-alt:#ffffff;}
+html[data-theme="dark"]{--bg:#1A1A1A;--text:#e5e5e5;--accent:#4FA4D9;--bg-alt:#2b2b2b;}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+
+header{
+  position:fixed;top:0;left:0;width:100%;height:64px;padding:0 .75rem;
+  background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(0,0,0,.05);z-index:1000
+}
+#burger{font-size:1.75rem;border:none;background:none;cursor:pointer;flex:0 0 44px}
+#banner{height:48px;object-fit:contain;max-width:40vw}
+#modeToggle{
+  border:1px solid var(--accent);background:none;padding:.35rem .7rem;border-radius:4px;
+  color:var(--text);cursor:pointer;white-space:nowrap
+}
+
+#sidebar{
+  position:fixed;top:0;left:0;height:100%;width:250px;padding:80px 1.25rem 1.5rem;
+  background:var(--bg-alt);transform:translateX(-100%);transition:.3s transform ease;z-index:1100
+}
+#sidebar.open{transform:none}
+#sidebar a{display:block;margin-bottom:1rem;text-decoration:none;color:var(--text);font-size:1.1rem}
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.2);
+  backdrop-filter:blur(1px);display:none;z-index:1050}
+#overlay.active{display:block}
+
+main{padding:96px 1rem 120px;max-width:1000px;margin:auto;text-align:center}
+h1{font-size:2.4rem;font-weight:700;margin-bottom:1rem}
+p.lead{font-size:1.15rem;margin-bottom:2.5rem}
+.placeholder{
+  width:100%;max-width:640px;height:360px;margin:0 auto;background:#e0e0e0;
+  border:2px dashed #bcbcbc;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#777;font-size:1.2rem
+}
+
+@keyframes drift{from{transform:translateX(0) translateY(0) rotate(0deg)}
+  to{transform:translateX(-110vw) translateY(20px) rotate(var(--spinEnd))}}
+.floater{position:fixed;top:calc(10% + var(--randY));right:-120px;width:100px;pointer-events:none;
+  animation:drift var(--dur) linear forwards;}
+
+#audioBar{
+  position:fixed;bottom:0;left:0;width:100%;padding:.5rem 1rem;background:var(--bg-alt);
+  display:flex;align-items:center;justify-content:center;gap:1rem;border-top:1px solid rgba(0,0,0,.05)
+}
+#audioBar button,#audioBar input{font:inherit}
+#audioBar button{border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text)}
+#trackLabel{min-width:140px;font-size:.9rem;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
+<header>
+  <button id="burger" aria-label="Menu">☰</button>
+  <img id="banner" src="/images/bannerlogo.png" alt="Mandated Top Society">
+  <button id="modeToggle">Hungover Mode</button>
+</header>
 
-<h1 style="margin-top:1.5rem">Debug – White Bucket Hat AR</h1>
+<nav id="sidebar" aria-label="Site">
+  <a href="https://mandatedtopsociety.com">Home</a>
+  <a href="https://mandatedtopsociety.com/products">Products</a>
+  <a href="https://mandatedtopsociety.com/tryon">Try On</a>
+  <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
+</nav>
+<div id="overlay"></div>
 
-<button id="startBtn">Start camera</button>
+<main>
+  <h1>AR Try‑On Coming Soon</h1>
+  <p class="lead">We’re building a web‑based face‑tracking experience so you can see our hats on your own noggin. Hang tight!</p>
+  <div class="placeholder">AR Module Under Construction…</div>
+  <p style="margin-top:2rem">
+    <a style="color:var(--accent);text-decoration:none;font-weight:600" href="/products">← Back to Products</a>
+  </p>
+</main>
 
-<mindar-face id="ar" auto-start="false">
-  <a-scene mindar-face embedded color-space="sRGB" vr-mode-ui="enabled: false"
-           renderer="precision: mediump; antialias: true">
-    <a-assets>
-      <a-asset-item id="hat" src="/models/whitebuckethat.glb"></a-asset-item>
-    </a-assets>
-
-    <!-- Anchor 168 = forehead / top‑of‑head -->
-    <a-entity mindar-face-target="anchorIndex: 168">
-      <a-gltf-model src="#hat" position="0 0.15 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <a-camera active="false"></a-camera>
-  </a-scene>
-</mindar-face>
+<div id="audioBar">
+  <button id="prev" aria-label="Previous track">◀︎</button>
+  <button id="playPause" aria-label="Play" data-state="paused">▷</button>
+  <button id="next" aria-label="Next track">▶︎</button>
+  <span id="trackLabel">MTS Radio</span>
+  <input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+</div>
+<audio id="audio" preload="none"></audio>
 
 <script>
-document.getElementById("startBtn").onclick = async () => {
-  const ar = document.getElementById("ar");
-  document.getElementById("startBtn").style.display = "none";
-  ar.style.display = "block";
+(()=>{const $=s=>document.querySelector(s);
+const root=document.documentElement;
+root.dataset.theme=localStorage.getItem('mts-theme')||'light';
+$('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
 
-  try {
-    await ar.start();                 // prompts for camera permission
-    console.log("MindAR started successfully");
-  } catch (e) {
-    alert("AR failed: " + e.message);
-    console.error("MindAR runtime error:", e);
-  }
-};
+$('#burger').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('active')};
+$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('active')};
+
+/* floating hats animation (same as homepage) */
+const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
+let hatIndex=0;
+function spawnHat(){
+  const img=document.createElement('img');
+  img.src=hatImgs[hatIndex];hatIndex=(hatIndex+1)%hatImgs.length;
+  img.className='floater';
+  img.style.setProperty('--dur',`${8+Math.random()*8}s`);
+  img.style.setProperty('--randY',`${Math.random()*60}vh`);
+  img.style.setProperty('--spinEnd',`${Math.random()>0.5?'-':''}${720+Math.random()*720}deg`);
+  document.body.appendChild(img);
+  img.addEventListener('animationend',()=>img.remove());
+}
+setInterval(spawnHat,10000+Math.random()*5000);
+
+/* simple audio player */
+const playlist=[
+  {src:'/music/track1.mp3',title:'Track 1'},
+  {src:'/music/track2.mp3',title:'Track 2'},
+  {src:'/music/track3.mp3',title:'Track 3'}
+];
+let current=0;const audio=$('#audio'),label=$('#trackLabel');
+function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
+load(0);
+$('#playPause').onclick=()=>{if(audio.paused){audio.play();event.target.textContent='❚❚';}else{audio.pause();event.target.textContent='▷';}};
+$('#prev').onclick=()=>{load(current-1);audio.play();$('#playPause').textContent='❚❚';};
+$('#next').onclick=()=>{load(current+1);audio.play();$('#playPause').textContent='❚❚';};
+$('#volume').oninput=e=>audio.volume=e.target.value;
+audio.onended=()=>$('#next').click();
+})();
 </script>
 </body>
 </html>
