@@ -27,13 +27,29 @@ img,video{max-width:100%;display:block}
 
 /* ---------- Header ---------- */
 header{
-	position:fixed;top:0;left:0;width:100%;height:64px;padding:0 1rem;
+	position:fixed;top:0;left:0;width:100%;height:64px;padding:0 .75rem;
 	background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;
 	border-bottom:1px solid rgba(0,0,0,.05);z-index:1000
 }
-#burger{font-size:1.75rem;border:none;background:none;cursor:pointer;line-height:1}
-#banner{height:48px;width:auto;object-fit:contain}
-#modeToggle{border:1px solid var(--accent);background:none;padding:.4rem .8rem;border-radius:4px;font:inherit;color:var(--text);cursor:pointer}
+#burger{font-size:1.75rem;border:none;background:none;cursor:pointer;line-height:1;flex:0 0 44px}
+#banner{
+	height:48px;width:auto;object-fit:contain;
+	max-width:40vw;               /* shrink on narrow screens */
+	flex-shrink:1;flex-grow:1
+}
+#modeToggle{
+	border:1px solid var(--accent);background:none;padding:.35rem .7rem;border-radius:4px;
+	font:inherit;color:var(--text);cursor:pointer;flex:0 0 auto;white-space:nowrap
+}
+/* iPhone‑sized screens */
+@media (max-width:420px){
+	#banner{height:42px;max-width:34vw}
+	#modeToggle{font-size:.85rem;padding:.3rem .6rem}
+}
+/* Extra‑narrow */
+@media (max-width:340px){
+	#banner{height:38px;max-width:30vw}
+}
 
 /* ---------- Sidebar ---------- */
 #sidebar{
@@ -84,9 +100,7 @@ section h2{font-size:1.8rem;margin-bottom:1.2rem;text-align:center}
 	display:flex;align-items:center;justify-content:center;gap:1rem;border-top:1px solid rgba(0,0,0,.05)
 }
 #audioBar button,#audioBar input{font:inherit}
-#audioBar button{
-	border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text)
-}
+#audioBar button{border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text)}
 #trackLabel{min-width:140px;font-size:.9rem;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- Accessibility ---------- */
@@ -182,7 +196,6 @@ function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[
 load(current);
 audio.currentTime=parseFloat(localStorage.getItem(LS_TIME)||0);
 if(localStorage.getItem(LS_PLAY)==='1'){audio.play().catch(()=>{});playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
-
 playBtn.onclick=()=>{
 	if(playBtn.dataset.state==='paused'){audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing';}
 	else{audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused';}
@@ -205,7 +218,7 @@ let hatIndex=0;
 function spawnHat(){
 	const img=document.createElement('img');
 	img.src=hatImgs[hatIndex];
-	hatIndex=(hatIndex+1)%hatImgs.length;        /* white → pink → blue → green → repeat */
+	hatIndex=(hatIndex+1)%hatImgs.length;
 	img.className='floater';
 	img.style.setProperty('--dur',`${8+Math.random()*8}s`);
 	img.style.setProperty('--randY',`${Math.random()*60}vh`);
