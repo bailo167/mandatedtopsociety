@@ -2,267 +2,248 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mandated Top Society</title>
+
+<!-- ──────────────────────────  CSS  ────────────────────────── -->
 <style>
-/* ==== THEME VARIABLES ==== */
+/* ── Color Scheme ─────────────────────────────────────────── */
 :root{
-  --bg:#fafafa;
-  --text:#222;
-  --accent:#5EC3FF;
-  --card:#fff;
+  --bg:#fafafa;--text:#222;--accent:#5ec3ff;--header:#ffffffcc;--card:#fff;
 }
-.dark{
-  --bg:#1A1A1A;
-  --text:#eee;
-  --accent:#4FA4D9;
-  --card:#2a2a2a;
+body.dark{
+  --bg:#1a1a1a;--text:#eee;--accent:#4fa4d9;--header:#1a1a1acc;--card:#222;
 }
-/* ==== RESET & BASICS ==== */
+
+/* ── Reset / Base ─────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;scroll-behavior:smooth;}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.5;
-  overflow-x:hidden;
-  transition:background .3s,color .3s;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.5;
 }
-a{color:var(--accent);text-decoration:none}
-a:hover,a:focus{text-decoration:underline;opacity:.8}
 img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
-/* ==== HEADER ==== */
+
+/* ── Layout ───────────────────────────────────────────────── */
 header{
-  position:fixed;top:0;left:0;width:100%;display:flex;align-items:center;
-  justify-content:space-between;padding:.75rem 1rem;z-index:1000;
-  background:var(--bg);border-bottom:1px solid rgba(0,0,0,.05);
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 1rem;background:var(--header);backdrop-filter:blur(6px);
 }
-#menuBtn{font-size:1.5rem}
-#banner{
-  height:40px;width:auto;
+#hamburger{font-size:1.6rem;background:none;border:none;color:var(--text);cursor:pointer}
+.banner{height:40px}
+#modeToggle{
+  border:1px solid var(--accent);padding:.4rem .75rem;border-radius:4px;background:none;
+  color:var(--accent);cursor:pointer;font-size:.9rem;
 }
-#toggleMode{
-  padding:.25rem .75rem;border:1px solid var(--accent);border-radius:4px;
-  transition:background .2s;
+#modeToggle:hover,#modeToggle:focus{background:var(--accent);color:var(--bg)}
+
+aside{
+  position:fixed;top:0;left:0;height:100%;width:260px;background:var(--card);
+  transform:translateX(-100%);transition:transform .3s ease;z-index:1500;
+  display:flex;flex-direction:column;padding:4rem 1.25rem;gap:1.25rem;
 }
-#toggleMode:hover{background:var(--accent);color:#fff}
-/* ==== SIDEBAR ==== */
-#sidebar{
-  position:fixed;top:0;left:-260px;width:260px;height:100vh;
-  background:var(--card);padding:3.5rem 1rem 1rem;border-right:1px solid rgba(0,0,0,.05);
-  transition:left .3s;z-index:999;
-}
-#sidebar.open{left:0}
-#sidebar a{display:block;margin:.75rem 0;font-size:1.1rem}
-/* click‑off overlay */
+aside.open{transform:translateX(0)}
+aside a{color:var(--text);text-decoration:none;font-weight:500;font-size:1.1rem}
+aside a:hover,aside a:focus{color:var(--accent)}
+
 #overlay{
-  position:fixed;inset:0;backdrop-filter:blur(1px);
-  background:rgba(0,0,0,.2);display:none;z-index:998;
+  position:fixed;inset:0;background:#0003;backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+  z-index:1400;
 }
-#overlay.show{display:block}
-/* ==== MAIN ==== */
+#overlay.visible{opacity:1;pointer-events:auto}
+
+/* ── Main Sections ───────────────────────────────────────── */
 main{padding-top:80px}
-section{padding:3rem 1rem;max-width:1200px;margin:auto}
-h2{margin-bottom:1rem;font-size:1.8rem;border-bottom:2px solid var(--accent);display:inline-block}
-.hero{text-align:center}
-.hero p{margin:1rem 0 2rem}
+section{padding:3rem 1rem}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem}
+.hero h1{font-size:clamp(2rem,5vw,3rem)}
 .btn{
-  display:inline-block;padding:.65rem 1.2rem;border-radius:4px;
-  background:var(--accent);color:#fff;font-weight:600;transition:opacity .2s
+  display:inline-block;padding:.8rem 1.6rem;border:none;border-radius:4px;
+  background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600;cursor:pointer;
 }
 .btn:hover,.btn:focus{opacity:.85}
-/* ==== PRODUCTS GRID ==== */
-.grid{
-  display:grid;gap:1rem;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+
+.products-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.25rem;max-width:1000px;margin:auto
 }
-.product{
-  background:var(--card);padding:1rem;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .2s;
+.products-grid img{border:2px solid transparent;border-radius:6px;transition:transform .2s}
+.products-grid img:hover{transform:scale(1.05);border-color:var(--accent)}
+
+.instagram-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;max-width:900px;margin:auto
 }
-.product:hover{transform:scale(1.05)}
-/* ==== INSTAGRAM ==== */
-#instaGrid{
-  display:grid;gap:.5rem;margin-top:1rem;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+.instagram-grid a{display:block;border-radius:4px;overflow:hidden}
+.instagram-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;transition:transform .2s ease}
+.instagram-grid img:hover{transform:scale(1.06)}
+
+/* ── Radio Player ────────────────────────────────────────── */
+#radioBar{
+  position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:1rem;
+  background:var(--header);backdrop-filter:blur(8px);padding:.6rem 1rem;font-size:1rem;z-index:1000;
 }
-.instaPost{position:relative;padding-top:100%;overflow:hidden;cursor:pointer}
-.instaPost img{
-  position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;
+#radioBar button{
+  border:none;background:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:.2rem .5rem;
 }
-/* ==== AUDIO PLAYER ==== */
-#playerBar{
-  position:fixed;bottom:0;left:0;width:100%;background:var(--card);
-  border-top:1px solid rgba(0,0,0,.05);display:flex;align-items:center;
-  gap:.75rem;padding:.5rem 1rem;z-index:900;
+#trackInfo{flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#volume{width:100px}
+
+/* ── Floating Hats ───────────────────────────────────────── */
+@keyframes drift{0%{transform:translateX(0) translateY(0) rotate(0deg)}
+100%{transform:translateX(-110vw) translateY(20vh) rotate(360deg)}}
+.floating-hat{
+  position:fixed;top:-10vh;left:100vw;width:120px;opacity:.9;
+  animation:drift linear forwards 40s;
 }
-#trackName{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ==== FLOATING HATS ==== */
-@keyframes floatHat{
-  0%{transform:translate(var(--startX),var(--startY)) rotate(0deg)}
-  100%{transform:translate(calc(var(--startX) - 120vw),var(--endY)) rotate(var(--rot))}
-}
-.floatingHat{
-  position:fixed;top:0;left:0;width:80px;pointer-events:none;
-  animation:floatHat linear var(--dur) forwards;
-}
-/* ==== RESPONSIVE HELPERS ==== */
-@media(max-width:600px){
-  #banner{height:32px}
-}
-/* ==== ACCESSIBILITY ==== */
-:focus-visible{outline:2px dashed var(--accent);outline-offset:2px}
+/* Bobbing overlay */
+@keyframes bob{0%,100%{transform:translateY(-3%)}50%{transform:translateY(3%)}}
+.floating-hat img{width:100%;animation:bob 3s ease-in-out infinite}
+
+/* ── Accessibility / States ─────────────────────────────── */
+button:focus-visible, a:focus-visible, input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
-<!-- ===== HEADER ===== -->
+<!-- ──────────────────────────  Header  ────────────────────────── -->
 <header>
-  <button id="menuBtn" aria-label="Menu">☰</button>
-  <img id="banner" src="/images/banner.jpg" alt="Mandated Top Society">
-  <button id="toggleMode">Hungover Mode</button>
+  <button id="hamburger" aria-label="Menu">☰</button>
+  <img src="/images/banner.jpg" alt="Mandated Top Society banner" class="banner">
+  <button id="modeToggle">Hungover Mode</button>
 </header>
 
-<!-- SIDEBAR -->
-<nav id="sidebar" aria-label="Side Navigation">
-  <a href="#">Home</a>
-  <a href="#products">Products</a>
-  <a href="https://mandatedtopsociety.com/tryon">Try On</a>
-  <a href="#mtsRadio">MTS Radio</a>
-  <a href="https://www.instagram.com/mandatedtopsociety/" target="_blank">Instagram</a>
-</nav>
+<!-- ──────────────────────────  Sidebar  ───────────────────────── -->
+<aside id="sidebar" aria-hidden="true">
+  <a href="https://mandatedtopsociety.com">Home</a>
+  <a href="https://mandatedtopsociety.com/products">Products</a>
+  <a href="https://mandatedtopsociety.com/tryon">Try On</a>
+  <a href="https://mandatedtopsociety.com/radio">MTS Radio</a>
+  <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
+</aside>
 <div id="overlay"></div>
 
-<!-- ===== MAIN CONTENT ===== -->
+<!-- ──────────────────────────  Main  ──────────────────────────── -->
 <main>
-  <!-- HERO -->
+  <!-- Hero -->
   <section class="hero">
-    <h1>Welcome to the Mandated&nbsp;Top&nbsp;Society!</h1>
-    <p>Grab a lid, crack a cold one, enjoy the arvo.</p>
-    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
+    <h1>Welcome to the Mandated Top Society!</h1>
+    <p>Buckets, banter &amp; endless summer vibes.</p>
+    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
   </section>
 
-  <!-- PRODUCTS -->
+  <!-- Products -->
   <section id="products">
-    <h2>Products</h2>
-    <div class="grid">
-      <div class="product"><img src="/images/white.png" alt="White Hat"></div>
-      <div class="product"><img src="/images/pink.png"  alt="Pink Hat"></div>
-      <div class="product"><img src="/images/blue.png"  alt="Blue Hat"></div>
-      <div class="product"><img src="/images/green.png" alt="Green Hat"></div>
-      <div class="product"><img src="/images/red.png"   alt="Red Hat"></div>
-    </div>
-    <div style="text-align:center;margin-top:2rem">
-      <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
-    </div>
+    <h2>Products</h2><br>
+    <div class="products-grid">
+      <img src="/images/white.png"  alt="White bucket hat">
+      <img src="/images/pink.png"   alt="Pink bucket hat">
+      <img src="/images/blue.png"   alt="Blue bucket hat">
+      <img src="/images/green.png"  alt="Green bucket hat">
+      <img src="/images/red.png"    alt="Red bucket hat">
+    </div><br>
+    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
   </section>
 
-  <!-- INSTAGRAM -->
+  <!-- Instagram -->
   <section id="instagram">
-    <h2>From the ’Gram</h2>
-    <div id="instaGrid" aria-live="polite">
-      <!-- Posts injected here -->
+    <h2>From the ’Gram</h2><br>
+    <div class="instagram-grid" id="instaGrid">
+      <!-- Fallback thumbnails; replace with real embeds if desired -->
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta1.jpg" alt="Instagram post 1">
+      </a>
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta2.jpg" alt="Instagram post 2">
+      </a>
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta3.jpg" alt="Instagram post 3">
+      </a>
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta4.jpg" alt="Instagram post 4">
+      </a>
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta5.jpg" alt="Instagram post 5">
+      </a>
+      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
+        <img src="/images/insta6.jpg" alt="Instagram post 6">
+      </a>
     </div>
   </section>
 </main>
 
-<!-- ===== AUDIO PLAYER ===== -->
-<div id="playerBar">
-  <button id="playPause" aria-label="Play">▶️</button>
-  <button id="nextTrack" aria-label="Next">⏭️</button>
-  <input id="volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
-  <span id="trackName">MTS Radio</span>
+<!-- ──────────────────────────  Radio Player  ──────────────────── -->
+<div id="radioBar">
+  <button id="prev" aria-label="Previous track">◀︎</button>
+  <button id="playPause" aria-label="Play">▶︎</button>
+  <button id="next" aria-label="Next track">▶︎</button>
+  <span id="trackInfo">Not playing</span>
+  <input type="range" id="volume" min="0" max="1" step="0.01" aria-label="Volume">
 </div>
 
-<!-- ===== SCRIPTS ===== -->
+<!-- ──────────────────────────  Scripts  ───────────────────────── -->
 <script>
-(()=>{'use strict';
-/* ==== THEME TOGGLE ==== */
-const root=document.documentElement,modeBtn=document.getElementById('toggleMode');
-const setMode=dark=>{dark?root.classList.add('dark'):root.classList.remove('dark');localStorage.setItem('mts_dark',dark)};
-setMode(localStorage.getItem('mts_dark')==='true');
-modeBtn.onclick=()=>setMode(!root.classList.contains('dark'));
+(()=>{ 'use strict';
+/* ── Elements ─────────────────────────────────────────────── */
+const body=document.body, sidebar=$('#sidebar'), overlay=$('#overlay'),
+      hamb=$('#hamburger'), toggle=$('#modeToggle');
+/* ── Helpers ──────────────────────────────────────────────── */
+function $(q){return document.querySelector(q)}
+function openSidebar(){sidebar.classList.add('open');overlay.classList.add('visible');sidebar.setAttribute('aria-hidden','false')}
+function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('visible');sidebar.setAttribute('aria-hidden','true')}
 
-/* ==== SIDEBAR ==== */
-const side=document.getElementById('sidebar'),overlay=document.getElementById('overlay');
-const openSide=()=>{side.classList.add('open');overlay.classList.add('show')};
-const closeSide=()=>{side.classList.remove('open');overlay.classList.remove('show')};
-document.getElementById('menuBtn').onclick=openSide;
-overlay.onclick=closeSide;
-side.addEventListener('click',e=>{if(e.target.tagName==='A')closeSide()});
-/* swipe to close */
-let touchStartX=null;
-side.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX});
-side.addEventListener('touchmove',e=>{
-  if(touchStartX!==null){
-    const diff=e.touches[0].clientX-touchStartX;
-    if(diff>50)closeSide();
-  }
+/* ── Sidebar Logic ────────────────────────────────────────── */
+hamb.addEventListener('click',openSidebar);
+overlay.addEventListener('click',closeSidebar);
+sidebar.addEventListener('click',e=>{if(e.target.tagName==='A')closeSidebar()});
+/* Touch swipe to close (left→right to open from edge, right→left to close) */
+let startX=null;
+window.addEventListener('touchstart',e=>{startX=e.touches[0].clientX});
+window.addEventListener('touchmove',e=>{
+  if(startX===null)return;
+  const dx=e.touches[0].clientX-startX;
+  if(!sidebar.classList.contains('open')&&startX<30&&dx>50)openSidebar();
+  if(sidebar.classList.contains('open')&&dx<-50)closeSidebar();
 });
+window.addEventListener('touchend',()=>startX=null);
 
-/* ==== INSTAGRAM FETCH ==== */
-(async()=>{
-  const username='mandatedtopsociety';
-  const grid=document.getElementById('instaGrid');
-  try{
-    const res=await fetch(`https://r.jina.ai/http://instagram.com/${username}`);
-    const text=await res.text();
-    const ids=[...text.matchAll(/"shortcode":"(.*?)"/g)].slice(0,6).map(m=>m[1]);
-    for(const code of ids){
-      const img=`https://instagram.com/p/${code}/media/?size=m`;
-      const link=`https://instagram.com/p/${code}`;
-      const div=document.createElement('div');
-      div.className='instaPost';
-      div.innerHTML=`<img src="${img}" alt="Instagram post">`;
-      div.onclick=()=>window.open(link,'_blank');
-      grid.appendChild(div);
-    }
-  }catch(e){
-    grid.innerHTML='<p>Could not load feed. Check us out on Instagram!</p>';
-  }
-})();
+/* ── Theme Toggle ─────────────────────────────────────────── */
+const THEME_KEY='mts-theme';
+function setTheme(dark){body.classList.toggle('dark',dark);localStorage.setItem(THEME_KEY,dark?'dark':'light')}
+toggle.addEventListener('click',()=>setTheme(!body.classList.contains('dark')));
+setTheme(localStorage.getItem(THEME_KEY)==='dark');
 
-/* ==== AUDIO PLAYER ==== */
-const tracks=['track1.mp3','track2.mp3','track3.mp3']; // add your files in /music/
-let current=-1,firstPlay=true;
-const audio=new Audio();audio.preload='none';
-const playBtn=document.getElementById('playPause');
-const nextBtn=document.getElementById('nextTrack');
-const vol=document.getElementById('volume');
-const nameSpan=document.getElementById('trackName');
-const pickNext=()=>{current=(current+1)%tracks.length;audio.src='/music/'+tracks[current];nameSpan.textContent=tracks[current].replace(/\.\w+$/,'')};
-const shuffleFirst=()=>{current=Math.floor(Math.random()*tracks.length);audio.src='/music/'+tracks[current];nameSpan.textContent=tracks[current].replace(/\.\w+$/,'')};
-playBtn.onclick=()=>{
-  if(audio.paused){
-    if(firstPlay){shuffleFirst();firstPlay=false}
-    audio.play();playBtn.textContent='⏸️';
-  }else{audio.pause();playBtn.textContent='▶️'}
-};
-nextBtn.onclick=()=>{pickNext();audio.play();playBtn.textContent='⏸️'};
-audio.onended=nextBtn.onclick;
-vol.oninput=()=>{audio.volume=vol.value};
+/* ── Radio Player ─────────────────────────────────────────── */
+const playlist=[
+  {src:'/music/track1.mp3',artist:'Flip Flop',title:'Beach Run'},
+  {src:'/music/track2.mp3',artist:'Sunburn',title:'Dusty Sunday'},
+  {src:'/music/track3.mp3',artist:'Cooler Crew',title:'Ice Cold'}
+];
+let idx=Math.floor(Math.random()*playlist.length), playing=false;
+const audio=new Audio(); audio.preload='none'; audio.volume=0.5;
+$('#volume').value=audio.volume;
+const updateInfo=()=>$('#trackInfo').textContent=`${playlist[idx].artist} – ${playlist[idx].title}`;
+function loadTrack(){audio.src=playlist[idx].src;updateInfo();}
+function play(){if(!playing){audio.play();playing=true;$('#playPause').textContent='❚❚';}}
+function pause(){audio.pause();playing=false;$('#playPause').textContent='▶︎';}
+$('#playPause').addEventListener('click',()=>{playing?pause():(!audio.src&&loadTrack(),play())});
+$('#next').addEventListener('click',()=>{idx=(idx+1)%playlist.length;loadTrack();play()});
+$('#prev').addEventListener('click',()=>{idx=(idx-1+playlist.length)%playlist.length;loadTrack();play()});
+audio.addEventListener('ended',()=>$('#next').click());
+$('#volume').addEventListener('input',e=>audio.volume=e.target.value);
 
-/* ==== FLOATING HATS ==== */
-const hatImgs=['white.png','pink.png','blue.png','green.png','red.png'];
+/* ── Floating Hats ────────────────────────────────────────── */
+const hatImgs=['white','pink','blue','green','red'].map(c=>`/images/${c}.png`);
 function spawnHat(){
-  const img=hatImgs[Math.floor(Math.random()*hatImgs.length)];
-  const el=document.createElement('img');
-  el.src='/images/'+img;
-  el.className='floatingHat';
-  const dur=30+Math.random()*15;
-  el.style.setProperty('--dur',dur+'s');
-  const startY=Math.random()*80+10;
-  const endY=startY+(Math.random()*20-10);
-  const rot=(Math.random()>.5?'' : '-')+360;
-  el.style.setProperty('--startX','100vw');
-  el.style.setProperty('--startY',startY+'vh');
-  el.style.setProperty('--endY',endY+'vh');
-  el.style.setProperty('--rot',rot+'deg');
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),dur*1000+1000);
+  const wrap=document.createElement('div');wrap.className='floating-hat';
+  const img=document.createElement('img');img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
+  wrap.style.top=Math.random()*80+'vh';wrap.appendChild(img);document.body.appendChild(wrap);
+  wrap.addEventListener('animationend',()=>wrap.remove());
+  scheduleHat();
 }
-setInterval(spawnHat, Math.random()*15000+30000); // first after ~30‑45s
+function scheduleHat(){
+  setTimeout(spawnHat,Math.random()*15000+30000); // 30‑45 s
+}
+scheduleHat();
 })();
 </script>
 </body>
