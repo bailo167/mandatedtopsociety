@@ -2,249 +2,206 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mandated Top Society</title>
 
-<!-- ──────────────────────────  CSS  ────────────────────────── -->
+<!-- ───────────────────────── CSS ───────────────────────── -->
 <style>
-/* ── Color Scheme ─────────────────────────────────────────── */
-:root{
-  --bg:#fafafa;--text:#222;--accent:#5ec3ff;--header:#ffffffcc;--card:#fff;
+:root{                 /* Light theme (default) */
+  --bg:#f9f9f9;
+  --text:#222;
+  --accent:#5EC3FF;
 }
-body.dark{
-  --bg:#1a1a1a;--text:#eee;--accent:#4fa4d9;--header:#1a1a1acc;--card:#222;
+[data-theme="dark"]{   /* Hungover Mode */
+  --bg:#1A1A1A;
+  --text:#EEE;
+  --accent:#4FA4D9;
 }
 
-/* ── Reset / Base ─────────────────────────────────────────── */
+/* Reset + base */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;scroll-behavior:smooth;}
-body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);color:var(--text);line-height:1.5;
-}
-img{max-width:100%;display:block}
+body{font-family:sans-serif;line-height:1.5;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover,a:focus{opacity:.8}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* ── Layout ───────────────────────────────────────────────── */
-header{
-  position:fixed;top:0;left:0;right:0;z-index:1000;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.75rem 1rem;background:var(--header);backdrop-filter:blur(6px);
-}
-#hamburger{font-size:1.6rem;background:none;border:none;color:var(--text);cursor:pointer}
-.banner{height:40px}
-#modeToggle{
-  border:1px solid var(--accent);padding:.4rem .75rem;border-radius:4px;background:none;
-  color:var(--accent);cursor:pointer;font-size:.9rem;
-}
-#modeToggle:hover,#modeToggle:focus{background:var(--accent);color:var(--bg)}
+/* Header */
+header{position:fixed;inset:0 0 auto 0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;background:var(--bg);border-bottom:1px solid rgba(0,0,0,.05);z-index:1000}
+#menuBtn,#toggleTheme{background:none;border:none;font-size:1.5rem;color:var(--text);cursor:pointer}
+#toggleTheme{font-size:.9rem;border:1px solid var(--accent);border-radius:4px;padding:.25rem .65rem}
+#banner{max-height:48px;width:auto}
 
-aside{
-  position:fixed;top:0;left:0;height:100%;width:260px;background:var(--card);
-  transform:translateX(-100%);transition:transform .3s ease;z-index:1500;
-  display:flex;flex-direction:column;padding:4rem 1.25rem;gap:1.25rem;
-}
-aside.open{transform:translateX(0)}
-aside a{color:var(--text);text-decoration:none;font-weight:500;font-size:1.1rem}
-aside a:hover,aside a:focus{color:var(--accent)}
+/* Sidebar */
+#sidebar{position:fixed;top:0;left:-240px;width:240px;height:100%;background:var(--bg);box-shadow:2px 0 5px rgba(0,0,0,.1);transition:left .3s ease;z-index:1200;display:flex;flex-direction:column;padding-top:56px}
+#sidebar a{padding:1rem;border-bottom:1px solid rgba(0,0,0,.05);color:var(--text)}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);display:none;z-index:1100}
 
-#overlay{
-  position:fixed;inset:0;background:#0003;backdrop-filter:blur(2px);
-  opacity:0;pointer-events:none;transition:opacity .3s;
-  z-index:1400;
-}
-#overlay.visible{opacity:1;pointer-events:auto}
-
-/* ── Main Sections ───────────────────────────────────────── */
-main{padding-top:80px}
-section{padding:3rem 1rem}
+/* Main content */
+main{padding:80px 1rem 120px}
+section{margin-bottom:2rem}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem}
-.hero h1{font-size:clamp(2rem,5vw,3rem)}
-.btn{
-  display:inline-block;padding:.8rem 1.6rem;border:none;border-radius:4px;
-  background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600;cursor:pointer;
-}
-.btn:hover,.btn:focus{opacity:.85}
+.hero h1{font-size:2rem}
+.btn{display:inline-block;margin-top:.5rem;background:var(--accent);color:#fff;padding:.75rem 1.25rem;border:none;border-radius:4px;font-weight:600;cursor:pointer}
+.btn:hover,.btn:focus{opacity:.9}
 
-.products-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.25rem;max-width:1000px;margin:auto
-}
-.products-grid img{border:2px solid transparent;border-radius:6px;transition:transform .2s}
-.products-grid img:hover{transform:scale(1.05);border-color:var(--accent)}
+/* Products */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-top:1rem}
+.products-grid img{width:100%;border:1px solid rgba(0,0,0,.05);background:#fff;border-radius:8px;padding:.5rem}
 
-.instagram-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;max-width:900px;margin:auto
-}
-.instagram-grid a{display:block;border-radius:4px;overflow:hidden}
-.instagram-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;transition:transform .2s ease}
-.instagram-grid img:hover{transform:scale(1.06)}
+/* Instagram */
+#instaGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1rem}
+#instaGrid img{width:100%;border-radius:8px}
 
-/* ── Radio Player ────────────────────────────────────────── */
-#radioBar{
-  position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:1rem;
-  background:var(--header);backdrop-filter:blur(8px);padding:.6rem 1rem;font-size:1rem;z-index:1000;
-}
-#radioBar button{
-  border:none;background:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:.2rem .5rem;
-}
-#trackInfo{flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Radio player */
+#player{position:fixed;inset:auto 0 0 0;height:64px;background:var(--bg);border-top:1px solid rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;gap:1rem;padding:0 .5rem;z-index:1000}
+#player button{background:none;border:none;font-size:1.25rem;color:var(--text);cursor:pointer}
+#trackLabel{flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.9rem}
 #volume{width:100px}
 
-/* ── Floating Hats ───────────────────────────────────────── */
-@keyframes drift{0%{transform:translateX(0) translateY(0) rotate(0deg)}
-100%{transform:translateX(-110vw) translateY(20vh) rotate(360deg)}}
-.floating-hat{
-  position:fixed;top:-10vh;left:100vw;width:120px;opacity:.9;
-  animation:drift linear forwards 40s;
-}
-/* Bobbing overlay */
-@keyframes bob{0%,100%{transform:translateY(-3%)}50%{transform:translateY(3%)}}
-.floating-hat img{width:100%;animation:bob 3s ease-in-out infinite}
-
-/* ── Accessibility / States ─────────────────────────────── */
-button:focus-visible, a:focus-visible, input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* Floating hats */
+.hat-float{position:fixed;top:-100px;pointer-events:none;will-change:transform}
+@keyframes drift{to{transform:translateX(-110vw) rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-20px)}}
 </style>
 </head>
 <body>
-<!-- ──────────────────────────  Header  ────────────────────────── -->
-<header>
-  <button id="hamburger" aria-label="Menu">☰</button>
-  <img src="/images/banner.jpg" alt="Mandated Top Society banner" class="banner">
-  <button id="modeToggle">Hungover Mode</button>
-</header>
 
-<!-- ──────────────────────────  Sidebar  ───────────────────────── -->
-<aside id="sidebar" aria-hidden="true">
+<!-- ─────────────────────── Overlay + Sidebar ─────────────────────── -->
+<div id="overlay"></div>
+<nav id="sidebar">
   <a href="https://mandatedtopsociety.com">Home</a>
   <a href="https://mandatedtopsociety.com/products">Products</a>
   <a href="https://mandatedtopsociety.com/tryon">Try On</a>
   <a href="https://mandatedtopsociety.com/radio">MTS Radio</a>
   <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
-</aside>
-<div id="overlay"></div>
+</nav>
 
-<!-- ──────────────────────────  Main  ──────────────────────────── -->
+<!-- ────────────────────────── Header ────────────────────────── -->
+<header>
+  <button id="menuBtn" aria-label="Menu">☰</button>
+  <img id="banner" src="/images/banner.jpg" alt="Mandated Top Society banner">
+  <button id="toggleTheme">Hungover Mode</button>
+</header>
+
+<!-- ────────────────────────── Main ────────────────────────── -->
 <main>
   <!-- Hero -->
   <section class="hero">
-    <h1>Welcome to the Mandated Top Society!</h1>
-    <p>Buckets, banter &amp; endless summer vibes.</p>
-    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
+    <h1>Welcome to the Mandated Top Society!</h1>
+    <p>We advocate for government mandated top.</p>
+    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
   </section>
 
   <!-- Products -->
   <section id="products">
-    <h2>Products</h2><br>
+    <h2>Products</h2>
     <div class="products-grid">
-      <img src="/images/white.png"  alt="White bucket hat">
-      <img src="/images/pink.png"   alt="Pink bucket hat">
-      <img src="/images/blue.png"   alt="Blue bucket hat">
-      <img src="/images/green.png"  alt="Green bucket hat">
-      <img src="/images/red.png"    alt="Red bucket hat">
-    </div><br>
-    <a class="btn" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a>
+      <img src="/images/white.png" alt="White Bucket Hat">
+      <img src="/images/pink.png" alt="Pink Bucket Hat">
+      <img src="/images/blue.png" alt="Blue Bucket Hat">
+      <img src="/images/green.png" alt="Green Bucket Hat">
+      <img src="/images/red.png" alt="Red Bucket Hat">
+    </div>
+    <a class="btn" href="https://mandatedtopsociety.com/tryon" style="margin-top:1rem">Try On Our Hats</a>
   </section>
 
   <!-- Instagram -->
   <section id="instagram">
-    <h2>From the ’Gram</h2><br>
-    <div class="instagram-grid" id="instaGrid">
-      <!-- Fallback thumbnails; replace with real embeds if desired -->
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta1.jpg" alt="Instagram post 1">
-      </a>
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta2.jpg" alt="Instagram post 2">
-      </a>
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta3.jpg" alt="Instagram post 3">
-      </a>
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta4.jpg" alt="Instagram post 4">
-      </a>
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta5.jpg" alt="Instagram post 5">
-      </a>
-      <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">
-        <img src="/images/insta6.jpg" alt="Instagram post 6">
-      </a>
-    </div>
+    <h2>From the ’Gram</h2>
+    <div id="instaGrid"></div>
   </section>
 </main>
 
-<!-- ──────────────────────────  Radio Player  ──────────────────── -->
-<div id="radioBar">
-  <button id="prev" aria-label="Previous track">◀︎</button>
-  <button id="playPause" aria-label="Play">▶︎</button>
-  <button id="next" aria-label="Next track">▶︎</button>
-  <span id="trackInfo">Not playing</span>
-  <input type="range" id="volume" min="0" max="1" step="0.01" aria-label="Volume">
+<!-- ─────────────────────── MTS Radio Player ─────────────────────── -->
+<div id="player">
+  <button id="prevBtn" aria-label="Previous">◀︎</button>
+  <button id="playPauseBtn" aria-label="Play">▷</button>
+  <button id="nextBtn" aria-label="Next">▶︎</button>
+  <span id="trackLabel">MTS Radio</span>
+  <input id="volume" type="range" min="0" max="1" step="0.01">
 </div>
 
-<!-- ──────────────────────────  Scripts  ───────────────────────── -->
+<!-- ───────────────────────── JavaScript ───────────────────────── -->
 <script>
-(()=>{ 'use strict';
-/* ── Elements ─────────────────────────────────────────────── */
-const body=document.body, sidebar=$('#sidebar'), overlay=$('#overlay'),
-      hamb=$('#hamburger'), toggle=$('#modeToggle');
-/* ── Helpers ──────────────────────────────────────────────── */
-function $(q){return document.querySelector(q)}
-function openSidebar(){sidebar.classList.add('open');overlay.classList.add('visible');sidebar.setAttribute('aria-hidden','false')}
-function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('visible');sidebar.setAttribute('aria-hidden','true')}
+(()=>{/* IIFE keeps global scope clean */
 
-/* ── Sidebar Logic ────────────────────────────────────────── */
-hamb.addEventListener('click',openSidebar);
-overlay.addEventListener('click',closeSidebar);
-sidebar.addEventListener('click',e=>{if(e.target.tagName==='A')closeSidebar()});
-/* Touch swipe to close (left→right to open from edge, right→left to close) */
-let startX=null;
-window.addEventListener('touchstart',e=>{startX=e.touches[0].clientX});
-window.addEventListener('touchmove',e=>{
-  if(startX===null)return;
-  const dx=e.touches[0].clientX-startX;
-  if(!sidebar.classList.contains('open')&&startX<30&&dx>50)openSidebar();
-  if(sidebar.classList.contains('open')&&dx<-50)closeSidebar();
-});
-window.addEventListener('touchend',()=>startX=null);
+ /* ── Sidebar ── */
+ const sidebar=document.getElementById('sidebar');
+ const overlay=document.getElementById('overlay');
+ const openSidebar=()=>{sidebar.style.left='0';overlay.style.display='block'};
+ const closeSidebar=()=>{sidebar.style.left='-240px';overlay.style.display='none'};
+ document.getElementById('menuBtn').addEventListener('click',openSidebar);
+ overlay.addEventListener('click',closeSidebar);
+ sidebar.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeSidebar));
+ /* swipe‑to‑close */
+ let startX=null;
+ sidebar.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+ sidebar.addEventListener('touchmove',e=>{
+   if(startX!==null && e.touches[0].clientX-startX>50) closeSidebar();
+ });
 
-/* ── Theme Toggle ─────────────────────────────────────────── */
-const THEME_KEY='mts-theme';
-function setTheme(dark){body.classList.toggle('dark',dark);localStorage.setItem(THEME_KEY,dark?'dark':'light')}
-toggle.addEventListener('click',()=>setTheme(!body.classList.contains('dark')));
-setTheme(localStorage.getItem(THEME_KEY)==='dark');
+ /* ── Hungover Mode ── */
+ const root=document.documentElement;
+ const toggleBtn=document.getElementById('toggleTheme');
+ const setTheme=t=>{root.setAttribute('data-theme',t);localStorage.setItem('mts-theme',t)};
+ setTheme(localStorage.getItem('mts-theme')||'light');
+ toggleBtn.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
 
-/* ── Radio Player ─────────────────────────────────────────── */
-const playlist=[
-  {src:'/music/track1.mp3',artist:'Flip Flop',title:'Beach Run'},
-  {src:'/music/track2.mp3',artist:'Sunburn',title:'Dusty Sunday'},
-  {src:'/music/track3.mp3',artist:'Cooler Crew',title:'Ice Cold'}
-];
-let idx=Math.floor(Math.random()*playlist.length), playing=false;
-const audio=new Audio(); audio.preload='none'; audio.volume=0.5;
-$('#volume').value=audio.volume;
-const updateInfo=()=>$('#trackInfo').textContent=`${playlist[idx].artist} – ${playlist[idx].title}`;
-function loadTrack(){audio.src=playlist[idx].src;updateInfo();}
-function play(){if(!playing){audio.play();playing=true;$('#playPause').textContent='❚❚';}}
-function pause(){audio.pause();playing=false;$('#playPause').textContent='▶︎';}
-$('#playPause').addEventListener('click',()=>{playing?pause():(!audio.src&&loadTrack(),play())});
-$('#next').addEventListener('click',()=>{idx=(idx+1)%playlist.length;loadTrack();play()});
-$('#prev').addEventListener('click',()=>{idx=(idx-1+playlist.length)%playlist.length;loadTrack();play()});
-audio.addEventListener('ended',()=>$('#next').click());
-$('#volume').addEventListener('input',e=>audio.volume=e.target.value);
+ /* ── Radio Player ── */
+ const playlist=[
+   {src:'/music/track1.mp3',artist:'Bloke 1',title:'Bucket Beat'},
+   {src:'/music/track2.mp3',artist:'Bloke 2',title:'Suns Out'},
+   {src:'/music/track3.mp3',artist:'Bloke 3',title:'Sunday Arvo'}
+ ];
+ const audio=new Audio(),label=document.getElementById('trackLabel');
+ const playBtn=document.getElementById('playPauseBtn');
+ let index=Math.floor(Math.random()*playlist.length);
+ const load=i=>{const t=playlist[i];audio.src=t.src;label.textContent=`${t.artist} – ${t.title}`};
+ load(index);
+ const play=()=>{audio.play();playBtn.textContent='❚❚'};
+ const pause=()=>{audio.pause();playBtn.textContent='▷'};
+ playBtn.addEventListener('click',()=>audio.paused?play():pause());
+ document.getElementById('prevBtn').addEventListener('click',()=>{index=(index-1+playlist.length)%playlist.length;load(index);play()});
+ document.getElementById('nextBtn').addEventListener('click',()=>{index=(index+1)%playlist.length;load(index);play()});
+ audio.addEventListener('ended',()=>document.getElementById('nextBtn').click());
+ const vol=document.getElementById('volume');vol.value=audio.volume=.7;vol.addEventListener('input',()=>audio.volume=vol.value);
 
-/* ── Floating Hats ────────────────────────────────────────── */
-const hatImgs=['white','pink','blue','green','red'].map(c=>`/images/${c}.png`);
-function spawnHat(){
-  const wrap=document.createElement('div');wrap.className='floating-hat';
-  const img=document.createElement('img');img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
-  wrap.style.top=Math.random()*80+'vh';wrap.appendChild(img);document.body.appendChild(wrap);
-  wrap.addEventListener('animationend',()=>wrap.remove());
-  scheduleHat();
-}
-function scheduleHat(){
-  setTimeout(spawnHat,Math.random()*15000+30000); // 30‑45 s
-}
-scheduleHat();
-})();
+ /* ── Floating hats ── */
+ const hatImgs=['white.png','pink.png','blue.png','green.png','red.png'];
+ const spawnHat=()=>{
+   const img=document.createElement('img');
+   img.src='/images/'+hatImgs[Math.floor(Math.random()*hatImgs.length)];
+   img.className='hat-float';
+   const size=Math.random()*60+40;
+   img.style.width=size+'px';
+   img.style.top=Math.random()*window.innerHeight*0.6+40+'px';
+   img.style.left='100vw';
+   const dur=Math.random()*30+30;          /* 30‑60 s drift */
+   img.style.animation=`drift ${dur}s linear forwards, bob 4s ease-in-out infinite alternate`;
+   document.body.appendChild(img);
+   setTimeout(()=>img.remove(),dur*1000);
+ };
+ setTimeout(spawnHat,2000);
+ setInterval(spawnHat,Math.random()*15000+30000);/* 30‑45 s */
+
+ /* ── Instagram Fetch (best‑effort; CORS‑safe proxy) ── */
+ async function loadInsta(){
+   try{
+     const res=await fetch('https://r.jina.ai/http://www.instagram.com/mandatedtopsociety/?__a=1&__d=dis');
+     if(!res.ok) throw 0;
+     const data=await res.json();
+     const posts=data.graphql.user.edge_owner_to_timeline_media.edges;
+     const grid=document.getElementById('instaGrid');
+     posts.slice(0,12).forEach(edge=>{
+       const img=document.createElement('img');
+       img.src=edge.node.thumbnail_src;
+       img.alt='Instagram post';
+       grid.appendChild(img);
+     });
+   }catch{document.getElementById('instaGrid').textContent='Could not load posts.'}
+ }
+ loadInsta();
+})();/* IIFE end */
 </script>
 </body>
 </html>
