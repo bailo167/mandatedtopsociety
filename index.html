@@ -66,7 +66,6 @@ section h2{font-size:1.8rem;margin-bottom:1.2rem;text-align:center}
 .grid{display:grid;gap:1rem}
 #products .grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
 #instagram .grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
-#instagram .grid a{isolation:isolate}
 #instagram video{object-fit:cover;height:100%}
 
 /* ---------- Hat Animation ---------- */
@@ -150,17 +149,16 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 const $=s=>document.querySelector(s);
 
 /* ---------- Theme Toggle ---------- */
-const modeBtn=$('#modeToggle'),root=document.documentElement;
+const root=document.documentElement;
 root.dataset.theme=localStorage.getItem('mts-theme')||'light';
-modeBtn.addEventListener('click',()=>{
+$('#modeToggle').onclick=()=>{
 	const t=root.dataset.theme==='dark'?'light':'dark';
 	root.dataset.theme=t;localStorage.setItem('mts-theme',t);
-});
+};
 
 /* ---------- Sidebar ---------- */
-const sidebar=$('#sidebar'),overlay=$('#overlay'),burger=$('#burger');
-burger.onclick=()=>{sidebar.classList.add('open');overlay.classList.add('active')};
-overlay.onclick=()=>{sidebar.classList.remove('open');overlay.classList.remove('active')};
+$('#burger').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('active')};
+$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('active')};
 
 /* ---------- Instagram Fetch ---------- */
 fetch('/api/insta').then(r=>r.json()).then(({data})=>{
@@ -180,33 +178,30 @@ fetch('/api/insta').then(r=>r.json()).then(({data})=>{
 }).catch(()=>$('#instaFallback').style.display='block');
 
 /* ---------- Audio Player ---------- */
-const playlist=[
-	{src:'/music/track1.mp3',title:'Track 1'},
-	{src:'/music/track2.mp3',title:'Track 2'},
-	{src:'/music/track3.mp3',title:'Track 3'}
-];
+const playlist=[{src:'/music/track1.mp3',title:'Track 1'},{src:'/music/track2.mp3',title:'Track 2'},{src:'/music/track3.mp3',title:'Track 3'}];
 let current=Math.floor(Math.random()*playlist.length);
-const audio=$('#audio'),playBtn=$('#playPause'),prevBtn=$('#prev'),nextBtn=$('#next'),label=$('#trackLabel'),vol=$('#volume');
-const load=i=>{current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title};
-const play=()=>{audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing'};
-const pause=()=>{audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused'};
-playBtn.onclick=()=>playBtn.dataset.state==='paused'?play():pause();
-prevBtn.onclick=()=>{load(current-1);play()};nextBtn.onclick=()=>{load(current+1);play()};
-audio.onended=()=>{load(current+1);play()};vol.oninput=e=>audio.volume=e.target.value;load(current);
+const audio=$('#audio'),label=$('#trackLabel');
+function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title}
+load(current);
+$('#playPause').onclick=()=>{audio.paused?(audio.play(),this.textContent='❚❚'):audio.pause(),this.textContent='▷'};
+$('#prev').onclick=()=>{load(current-1);audio.play()};
+$('#next').onclick=()=>{load(current+1);audio.play()};
+audio.onended=()=>{load(current+1);audio.play()};
+$('#volume').oninput=e=>audio.volume=e.target.value;
 
 /* ---------- Floating Hats ---------- */
 const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
 function spawnHat(){
 	const img=document.createElement('img');
-	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
+	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)]; // uniform random pick
 	img.className='floater';
-	img.style.setProperty('--dur',`${10+Math.random()*10}s`);
+	img.style.setProperty('--dur',`${8+Math.random()*8}s`);
 	img.style.setProperty('--randY',`${Math.random()*60}vh`);
 	img.style.setProperty('--spinEnd',`${Math.random()>0.5?'-':''}${720+Math.random()*720}deg`);
 	document.body.appendChild(img);
 	img.addEventListener('animationend',()=>img.remove());
 }
-setInterval(spawnHat,20000+Math.random()*10000); // 20‑30 s
+setInterval(spawnHat,10000+Math.random()*5000); // every 10‑15 s (≈ 2× previous rate)
 })();
 </script>
 </body>
