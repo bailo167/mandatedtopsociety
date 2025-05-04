@@ -3,107 +3,88 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Try On – Mandated Top Society</title>
+<title>AR Try‑On – Mandated Top Society</title>
 <link rel="icon" href="/images/mainlogo.png" type="image/png">
 
-<!-- Google <model‑viewer> for Web | AR | VR -->
-<script type="module"
-        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<!-- MindAR Face (face‑tracking) + THREE + GLTF loader -->
+<script type="module">
+import {MindARThree} from "https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-face-three.prod.js";
+import * as THREE        from "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js";
+import {GLTFLoader}      from "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js";
+
+window.startHatAR = async () => {
+  document.getElementById("startBtn").remove();
+  const container = document.getElementById("ar");
+  container.style.display = "block";
+
+  /* 1 – boot MindAR */
+  const mindar = new MindARThree({
+    container,
+    filterMinCF:0.1,
+    filterBeta:0.02
+  });
+  const {renderer, scene, camera} = mindar;
+
+  /* 2 – lighting */
+  scene.add(new THREE.HemisphereLight(0xffffff,0x444444,1));
+
+  /* 3 – load hat GLB */
+  const loader = new GLTFLoader();
+  let hat = (await loader.loadAsync("/models/whitebuckethat.glb")).scene;
+  hat.position.set(0,0.15,0);      /* tweak height above face */
+  hat.scale.set(1,1,1);
+
+  /* 4 – anchor to forehead (index 168) */
+  const anchor = mindar.addAnchor(168);
+  anchor.group.add(hat);
+
+  /* 5 – start camera */
+  await mindar.start();
+  renderer.setAnimationLoop(() => renderer.render(scene, camera));
+
+  /* optional colour swap buttons */
+  document.querySelectorAll(".swatch").forEach(btn=>{
+    btn.onclick = async () => {
+      const g = (await loader.loadAsync(`/models/${btn.dataset.color}buckethat.glb`)).scene;
+      g.position.copy(hat.position);
+      g.scale.copy(hat.scale);
+      anchor.group.remove(hat);
+      anchor.group.add(g);
+      hat = g;
+    };
+  });
+};
+</script>
 
 <style>
-:root{--bg:#fafafa;--text:#1f1f1f;--accent:#5EC3FF;--bg-alt:#ffffff;}
-html[data-theme="dark"]{--bg:#1A1A1A;--text:#e5e5e5;--accent:#4FA4D9;--bg-alt:#2b2b2b;}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
-
-header{
-  position:fixed;top:0;left:0;width:100%;height:64px;padding:0 .75rem;
-  background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid rgba(0,0,0,.05);z-index:1000
-}
-#banner{height:48px;object-fit:contain;max-width:40vw}
-#modeToggle{
-  border:1px solid var(--accent);background:none;padding:.35rem .7rem;border-radius:4px;
-  color:var(--text);cursor:pointer;white-space:nowrap
-}
-
-main{padding:96px 1rem 96px;max-width:900px;margin:auto;text-align:center}
-h1{font-size:2.3rem;margin-bottom:1rem}
-
-model-viewer{
-  width:100%;max-width:600px;height:500px;margin:1.5rem auto;
-  background:var(--bg-alt);border:1px solid rgba(0,0,0,.05);border-radius:8px
-}
-
-/* simple audio bar */
-#audioBar{
-  position:fixed;bottom:0;left:0;width:100%;padding:.5rem 1rem;background:var(--bg-alt);
-  display:flex;align-items:center;justify-content:center;gap:1rem;border-top:1px solid rgba(0,0,0,.05)
-}
-#audioBar button{border:none;background:none;font-size:1.3rem;cursor:pointer;color:var(--text)}
-#trackLabel{min-width:140px;font-size:.9rem;text-align:center}
+:root{--bg:#fafafa;--text:#1f1f1f;--accent:#5EC3FF;}
+body{margin:0;font-family:sans-serif;background:var(--bg);color:var(--text);text-align:center}
+button{font:inherit;cursor:pointer}
+#startBtn{margin:4rem auto;padding:.8rem 1.6rem;background:var(--accent);color:#fff;border:none;border-radius:6px;font-weight:600}
+#ar{display:none;width:100%;max-width:640px;margin:1.5rem auto;border-radius:8px;overflow:hidden}
+.swatch{width:32px;height:32px;border-radius:50%;border:1px solid #999;margin:.3rem;display:inline-block}
+.swatch:focus-visible{outline:2px solid var(--accent)}
 </style>
 </head>
 <body>
-<header>
-  <img id="banner" src="/images/bannerlogo.png" alt="Mandated Top Society">
-  <button id="modeToggle">Hungover Mode</button>
-</header>
 
-<main>
-  <h1>Try On Our Bucket Hat</h1>
+<h1 style="margin-top:1.2rem">Try On Our Bucket Hat</h1>
 
-  <!-- 3‑D model — GLB for Android / desktop, USDZ for iOS Quick Look -->
-  <model-viewer
-      src="/models/whitebuckethat.glb"
-      ios-src="/models/whitebuckethat.usdz"
-      alt="MTS Bucket Hat"
-      camera-controls
-      auto-rotate
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      exposure="1"
-      shadow-intensity="1">
-  </model-viewer>
+<button id="startBtn" onclick="startHatAR()">Start camera</button>
 
-  <p><a href="/products" style="color:var(--accent);text-decoration:none;font-weight:600">← Back to Products</a></p>
-</main>
+<div id="ar"></div>
 
-<!-- minimal audio player -->
-<div id="audioBar">
-  <button id="prev" aria-label="Previous track">◀︎</button>
-  <button id="playPause" aria-label="Play">▷</button>
-  <button id="next" aria-label="Next track">▶︎</button>
-  <span id="trackLabel">MTS Radio</span>
-  <input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+<!-- colour selector (optional) -->
+<div id="swatches" style="margin-top:.8rem">
+  <div class="swatch" data-color="white" style="background:#ffffff"></div>
+  <div class="swatch" data-color="pink"  style="background:#f7adc3"></div>
+  <div class="swatch" data-color="blue"  style="background:#4aa4ff"></div>
+  <div class="swatch" data-color="green" style="background:#3ac65a"></div>
 </div>
-<audio id="audio" preload="none"></audio>
 
-<script>
-(()=>{ // vanilla JS only
-const $=s=>document.querySelector(s);
+<p style="margin-top:2rem">
+  <a href="/products" style="color:var(--accent);text-decoration:none;font-weight:600">← Back to Products</a>
+</p>
 
-/* theme toggle */
-const root=document.documentElement;
-root.dataset.theme=localStorage.getItem('mts-theme')||'light';
-$('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
-
-/* tiny audio player */
-const playlist=[
-  {src:'/music/track1.mp3',title:'Track 1'},
-  {src:'/music/track2.mp3',title:'Track 2'},
-  {src:'/music/track3.mp3',title:'Track 3'}
-];
-let current=0;
-const audio=$('#audio'),label=$('#trackLabel');
-function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
-load(0);
-$('#playPause').onclick=()=>{if(audio.paused){audio.play();event.target.textContent='❚❚';}else{audio.pause();event.target.textContent='▷';}};
-$('#prev').onclick=()=>{load(current-1);audio.play();$('#playPause').textContent='❚❚';};
-$('#next').onclick=()=>{load(current+1);audio.play();$('#playPause').textContent='❚❚';};
-$('#volume').oninput=e=>audio.volume=e.target.value;
-audio.onended=()=>$('#next').click();
-})();
-</script>
 </body>
 </html>
