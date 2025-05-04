@@ -101,7 +101,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 <body>
 <header>
 	<button id="burger" aria-label="Menu">☰</button>
-	<img id="banner" src="/images/banner.jpg" alt="Mandated Top Society">
+	<img id="banner" src="/images/bannerlogo.png" alt="Mandated Top Society">
 	<button id="modeToggle">Hungover Mode</button>
 </header>
 
@@ -130,7 +130,6 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 			<img src="/images/pink.png"  alt="Pink hat">
 			<img src="/images/blue.png"  alt="Blue hat">
 			<img src="/images/green.png" alt="Green hat">
-			<img src="/images/red.png"   alt="Red hat">
 		</div>
 		<p style="text-align:center;margin-top:2rem"><a class="button" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a></p>
 	</section>
@@ -158,7 +157,6 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 
 /* ---------- Helpers ---------- */
 const $=s=>document.querySelector(s);
-const $$=s=>document.querySelectorAll(s);
 
 /* ---------- Theme Toggle ---------- */
 const modeBtn=$('#modeToggle');
@@ -187,7 +185,7 @@ fetch('/api/insta').then(r=>r.json()).then(({data})=>{
 		a.href=item.permalink;a.target='_blank';a.rel='noopener';
 		if(item.is_video){
 			const v=document.createElement('video');
-			v.src=item.thumb||item.url;v.muted=true;v.playsInline=true;v.autoplay=false;
+			v.src=item.thumb||item.url;v.muted=true;v.playsInline=true;
 			a.appendChild(v);
 		}else{
 			const img=document.createElement('img');
@@ -222,7 +220,7 @@ vol.addEventListener('input',e=>audio.volume=e.target.value);
 load(current);
 
 /* ---------- Floating Hats ---------- */
-const hatImgs=['white','pink','blue','green','red'].map(c=>`/images/${c}.png`);
+const hatImgs=['white','pink','blue','green'].map(c=>`/images/${c}.png`);
 function spawnHat(){
 	const img=document.createElement('img');
 	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
