@@ -1,203 +1,240 @@
 <!DOCTYPE html>
-<html lang="en-AU">
+<html lang="en-AU" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mandated Top Society</title>
-
 <style>
-/* ---------- CSS VARIABLES & RESET ---------- */
+/* ---------- CSS Variables ---------- */
 :root{
-  --bg:#f7f7f7;
-  --text:#222;
-  --accent:#5EC3FF;
-  --card:#fff;
+	--bg:#fafafa;
+	--text:#1f1f1f;
+	--accent:#5EC3FF;
+	--bg-alt:#ffffff;
 }
-body.dark{
-  --bg:#1A1A1A;
-  --text:#e0e0e0;
-  --accent:#4FA4D9;
-  --card:#292929;
+html[data-theme="dark"]{
+	--bg:#1A1A1A;
+	--text:#e5e5e5;
+	--accent:#4FA4D9;
+	--bg-alt:#2b2b2b;
 }
+
+/* ---------- Base ---------- */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.4em;min-height:100vh;padding-top:64px}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+img,video{max-width:100%;display:block}
 
-/* ---------- HEADER ---------- */
-header{position:fixed;top:0;left:0;width:100%;height:64px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 1rem;box-shadow:0 2px 4px rgba(0,0,0,.1);z-index:1000}
-#menuBtn{font-size:1.8rem;background:none;border:none;cursor:pointer;color:var(--text)}
-header .banner{height:40px;max-width:50vw;object-fit:contain}
-#modeToggle{background:none;border:2px solid var(--accent);border-radius:4px;padding:4px 8px;cursor:pointer;color:var(--accent);font-size:.9rem;white-space:nowrap}
-
-/* ---------- SIDEBAR ---------- */
-#sidebar{position:fixed;top:0;left:0;height:100%;width:260px;background:var(--card);padding:80px 1.2rem 1rem;transform:translateX(-100%);transition:transform .3s ease;z-index:1200}
-#sidebar.open{transform:translateX(0)}
-#sidebar a{display:block;margin:1rem 0;color:var(--text);text-decoration:none;font-size:1.05rem}
-#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:1100}
-#overlay.show{opacity:1;pointer-events:auto}
-
-/* ---------- SECTIONS ---------- */
-section{padding:3rem 1rem;max-width:1200px;margin:auto}
-h1,h2{margin-bottom:1.2rem;text-align:center}
-h1{font-size:2rem}
-h2{font-size:1.6rem}
-
-#productsGrid,#instaGrid{display:grid;gap:1rem}
-#productsGrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-#productsGrid img,#instaGrid img,#instaGrid video{width:100%;height:auto;border-radius:6px;background:#ccc}
-
-button.primary{display:inline-block;background:var(--accent);color:#fff;border:none;border-radius:4px;padding:.75rem 1.2rem;font-size:1rem;cursor:pointer;margin:1.5rem auto;transition:opacity .2s}
-button.primary:hover,button.primary:focus{opacity:.85}
-
-/* ---------- RADIO ---------- */
-#radioBar{position:fixed;bottom:0;left:0;width:100%;background:var(--card);box-shadow:0 -2px 4px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;gap:.75rem;padding:.5rem 1rem;z-index:1000}
-#radioBar button{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text)}
-#trackLabel{min-width:140px;text-align:center;font-size:.9rem}
-#vol{width:100px}
-
-/* ---------- FLOATING HATS ---------- */
-@keyframes floatHat{
-  from{transform:translate(110vw,var(--y)) rotate(var(--rot))}
-  to{transform:translate(-110vw,var(--yEnd)) rotate(calc(var(--rot)*-1))}
+/* ---------- Header ---------- */
+header{
+	position:fixed;top:0;left:0;width:100%;height:64px;padding:0 1rem;
+	background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;
+	border-bottom:1px solid rgba(0,0,0,.05);z-index:1000
 }
-.floating-hat{position:fixed;top:0;left:0;pointer-events:none;width:80px;animation:floatHat linear var(--dur) forwards}
+#burger{font-size:1.75rem;border:none;background:none;cursor:pointer;line-height:1}
+#banner{height:48px;width:auto;object-fit:contain}
+#modeToggle{border:1px solid var(--accent);background:none;padding:.4rem .8rem;border-radius:4px;font:inherit;color:var(--text);cursor:pointer}
 
-/* ---------- ACCESSIBILITY STATES ---------- */
-a:focus,button:focus{outline:2px dashed var(--accent);outline-offset:2px}
+/* ---------- Sidebar ---------- */
+#sidebar{
+	position:fixed;top:0;left:0;height:100%;width:250px;padding:80px 1.25rem 1.5rem; /* leave room for header */
+	background:var(--bg-alt);transform:translateX(-100%);transition:.3s transform ease;z-index:1100
+}
+#sidebar.open{transform:none}
+#sidebar a{display:block;margin-bottom:1rem;text-decoration:none;color:var(--text);font-size:1.1rem}
+#overlay{
+	position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.2);
+	backdrop-filter:blur(1px);display:none;z-index:1050
+}
+#overlay.active{display:block}
+
+/* ---------- Main ---------- */
+main{padding:96px 1rem 120px;max-width:1200px;margin:auto}
+h1{
+	font-size:2.3rem;font-weight:700;line-height:1.35;margin-block:0.35em 0.9em;text-align:center
+}
+section{margin-top:3.5rem}
+section h2{font-size:1.8rem;margin-bottom:1.2rem;text-align:center}
+#spiel{font-size:1.1rem;text-align:center;max-width:650px;margin:.8rem auto 2rem}
+.button{
+	display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:.65rem 1.4rem;
+	border-radius:4px;font-weight:600;transition:.2s opacity
+}
+.button:hover,.button:focus{opacity:.85}
+
+/* ---------- Grids ---------- */
+.grid{
+	display:grid;gap:1rem
+}
+#products .grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+#instagram .grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+#instagram .grid a{position:relative;isolation:isolate}
+#instagram video{object-fit:cover;height:100%}
+
+/* ---------- Hat Animation ---------- */
+@keyframes drift{
+	from{transform:translateX(0) translateY(0) rotate(0deg)}
+	to{transform:translateX(-110vw) translateY(20px) rotate(var(--rot))}
+}
+.floater{
+	position:fixed;top:calc(10% + var(--randY));right:-120px;width:100px;pointer-events:none;
+	animation:drift var(--dur) linear forwards;
+}
+
+/* ---------- MTS Radio ---------- */
+#audioBar{
+	position:fixed;bottom:0;left:0;width:100%;padding:.5rem 1rem;background:var(--bg-alt);
+	display:flex;align-items:center;justify-content:center;gap:1rem;border-top:1px solid rgba(0,0,0,.05)
+}
+#audioBar button,#audioBar input{font:inherit}
+#audioBar button{
+	border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text)
+}
+#trackLabel{min-width:140px;font-size:.9rem;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- Accessibility ---------- */
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (hover:hover){
+	#sidebar a:hover{text-decoration:underline}
+}
 </style>
 </head>
 <body>
-
-<!-- ---------- HEADER ---------- -->
 <header>
-  <button id="menuBtn" aria-label="Open menu">☰</button>
-  <img src="/images/banner.jpg" alt="Mandated Top Society banner" class="banner">
-  <button id="modeToggle">Hungover Mode</button>
+	<button id="burger" aria-label="Menu">☰</button>
+	<img id="banner" src="/images/banner.jpg" alt="Mandated Top Society">
+	<button id="modeToggle">Hungover Mode</button>
 </header>
 
-<!-- ---------- SIDEBAR ---------- -->
-<nav id="sidebar" aria-label="Sidebar navigation">
-  <a href="https://mandatedtopsociety.com">Home</a>
-  <a href="https://mandatedtopsociety.com/products">Products</a>
-  <a href="https://mandatedtopsociety.com/tryon">Try On</a>
-  <a href="https://mandatedtopsociety.com/radio">MTS Radio</a>
-  <a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
+<nav id="sidebar" aria-label="Site">
+	<a href="https://mandatedtopsociety.com">Home</a>
+	<a href="https://mandatedtopsociety.com/products">Products</a>
+	<a href="https://mandatedtopsociety.com/tryon">Try On</a>
+	<a href="https://mandatedtopsociety.com/radio">MTS Radio</a>
+	<a href="https://instagram.com/mandatedtopsociety" target="_blank" rel="noopener">Instagram</a>
 </nav>
 <div id="overlay"></div>
 
-<!-- ---------- MAIN CONTENT ---------- -->
 <main>
-  <!-- Hero -->
-  <section id="hero">
-    <h1>Welcome to the Mandated Top Society!</h1>
-    <p style="text-align:center;margin-bottom:1.5rem;">We advocate for government‑mandated top.</p>
-    <div style="text-align:center">
-      <button class="primary" onclick="location.href='https://mandatedtopsociety.com/tryon'">Try On Our Hats</button>
-    </div>
-  </section>
+	<!-- Hero -->
+	<section id="hero">
+		<h1>Welcome to the <br>Mandated Top Society!</h1>
+		<p id="spiel">We advocate for government‑mandated top.</p>
+		<p style="text-align:center"><a class="button" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a></p>
+	</section>
 
-  <!-- Products -->
-  <section id="products">
-    <h2>Products</h2>
-    <div id="productsGrid">
-      <img src="/images/white.png" alt="White hat">
-      <img src="/images/pink.png" alt="Pink hat">
-      <img src="/images/blue.png" alt="Blue hat">
-      <img src="/images/green.png" alt="Green hat">
-      <img src="/images/red.png" alt="Red hat">
-    </div>
-    <div style="text-align:center">
-      <button class="primary" onclick="location.href='https://mandatedtopsociety.com/tryon'">Try On Our Hats</button>
-    </div>
-  </section>
+	<!-- Products -->
+	<section id="products">
+		<h2>Products</h2>
+		<div class="grid">
+			<img src="/images/white.png" alt="White hat">
+			<img src="/images/pink.png"  alt="Pink hat">
+			<img src="/images/blue.png"  alt="Blue hat">
+			<img src="/images/green.png" alt="Green hat">
+			<img src="/images/red.png"   alt="Red hat">
+		</div>
+		<p style="text-align:center;margin-top:2rem"><a class="button" href="https://mandatedtopsociety.com/tryon">Try On Our Hats</a></p>
+	</section>
 
-  <!-- Instagram -->
-  <section id="instagram">
-    <h2>Our Instagram</h2>
-    <div id="instaGrid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))"></div>
-  </section>
+	<!-- Instagram -->
+	<section id="instagram">
+		<h2>Our Instagram</h2>
+		<div class="grid" id="instaGrid"></div>
+		<p id="instaFallback" style="text-align:center;display:none">Instagram feed unavailable.</p>
+	</section>
 </main>
 
-<!-- ---------- RADIO BAR ---------- -->
-<div id="radioBar">
-  <button id="prevBtn" aria-label="Previous track">◀︎</button>
-  <button id="playPauseBtn" aria-label="Play/Pause">▷</button>
-  <button id="nextBtn" aria-label="Next track">▶︎</button>
-  <span id="trackLabel">&nbsp;</span>
-  <input id="vol" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
-  <audio id="audio" preload="none"></audio>
+<!-- MTS Radio -->
+<div id="audioBar">
+	<button id="prev" aria-label="Previous track">◀︎</button>
+	<button id="playPause" aria-label="Play" data-state="paused">▷</button>
+	<button id="next" aria-label="Next track">▶︎</button>
+	<span id="trackLabel">MTS Radio</span>
+	<input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
 </div>
+<audio id="audio" preload="none"></audio>
 
 <script>
-(function(){
-  /* ---------- THEME TOGGLE ---------- */
-  const body=document.body,modeBtn=document.getElementById('modeToggle');
-  const applyTheme=dark=>{body.classList.toggle('dark',dark);modeBtn.textContent='Hungover Mode';localStorage.setItem('mtsTheme',dark?'dark':'light');}
-  applyTheme(localStorage.getItem('mtsTheme')==='dark');
-  modeBtn.addEventListener('click',()=>applyTheme(!body.classList.contains('dark')));
+(()=>{'use strict';
 
-  /* ---------- SIDEBAR ---------- */
-  const sidebar=document.getElementById('sidebar'),overlay=document.getElementById('overlay');
-  const openNav=()=>{sidebar.classList.add('open');overlay.classList.add('show');}
-  const closeNav=()=>{sidebar.classList.remove('open');overlay.classList.remove('show');}
-  document.getElementById('menuBtn').addEventListener('click',openNav);
-  overlay.addEventListener('click',closeNav);
-  sidebar.addEventListener('click',e=>e.target.tagName==='A'&&closeNav());
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
 
-  /* ---------- INSTAGRAM FETCH ---------- */
-  fetch('/api/insta').then(r=>r.json()).then(({data})=>{
-    const grid=document.getElementById('instaGrid');
-    data.slice(0,12).forEach(p=>{
-      const a=document.createElement('a');a.href=p.permalink;a.target='_blank';a.rel='noopener';
-      if(p.is_video){
-        const v=document.createElement('video');v.src=p.url;v.poster=p.thumb;v.muted=true;v.playsInline=true;v.loop=true;
-        v.addEventListener('mouseenter',()=>v.play());v.addEventListener('mouseleave',()=>v.pause());
-        a.appendChild(v);
-      }else{
-        const img=document.createElement('img');img.src=p.thumb;img.alt=p.caption||'Instagram image';
-        a.appendChild(img);
-      }
-      grid.appendChild(a);
-    });
-  }).catch(()=>{document.getElementById('instaGrid').textContent='Unable to load feed.'});
+/* ---------- Theme Toggle ---------- */
+const modeBtn=$('#modeToggle');
+const root=document.documentElement;
+const storedTheme=localStorage.getItem('mts-theme');
+if(storedTheme){root.dataset.theme=storedTheme}
+modeBtn.addEventListener('click',()=>{
+	const newTheme=root.dataset.theme==='dark'?'light':'dark';
+	root.dataset.theme=newTheme;
+	localStorage.setItem('mts-theme',newTheme);
+});
 
-  /* ---------- RADIO PLAYER ---------- */
-  const playlist=[
-    {src:'/music/track1.mp3',artist:'Artist1',title:'Song1'},
-    {src:'/music/track2.mp3',artist:'Artist2',title:'Song2'},
-    {src:'/music/track3.mp3',artist:'Artist3',title:'Song3'}
-  ];
-  let index=Math.floor(Math.random()*playlist.length),started=false;
-  const audio=document.getElementById('audio'),label=document.getElementById('trackLabel');
-  const load=()=>{const t=playlist[index];audio.src=t.src;label.textContent=`${t.artist} – ${t.title}`;}
-  load();
-  const playPauseBtn=document.getElementById('playPauseBtn');
-  const play=()=>{audio.play();playPauseBtn.textContent='❚❚';}
-  const pause=()=>{audio.pause();playPauseBtn.textContent='▷';}
-  playPauseBtn.addEventListener('click',()=>{started? (audio.paused?play():pause()) : (started=true,play());});
-  document.getElementById('prevBtn').addEventListener('click',()=>{index=(index-1+playlist.length)%playlist.length;load();play();});
-  document.getElementById('nextBtn').addEventListener('click',()=>{index=(index+1)%playlist.length;load();play();});
-  audio.addEventListener('ended',()=>{index=(index+1)%playlist.length;load();play();});
-  document.getElementById('vol').addEventListener('input',e=>audio.volume=e.target.value);
+/* ---------- Sidebar ---------- */
+const sidebar=$('#sidebar'),overlay=$('#overlay'),burger=$('#burger');
+function openNav(){sidebar.classList.add('open');overlay.classList.add('active')}
+function closeNav(){sidebar.classList.remove('open');overlay.classList.remove('active')}
+burger.addEventListener('click',openNav);
+overlay.addEventListener('click',closeNav);
 
-  /* ---------- FLOATING HATS ---------- */
-  const hatImgs=['white','pink','blue','green','red'];
-  const createHat=()=>{
-    const img=document.createElement('img');
-    img.src=`/images/${hatImgs[Math.floor(Math.random()*hatImgs.length)]}.png`;
-    img.className='floating-hat';
-    const y=Math.random()*60-10, yEnd=y+Math.random()*20-10, rot=(Math.random()>.5?1:-1)*(30+Math.random()*60),
-          dur=15+Math.random()*10;
-    img.style.setProperty('--y',`${y}vh`);
-    img.style.setProperty('--yEnd',`${yEnd}vh`);
-    img.style.setProperty('--rot',`${rot}deg`);
-    img.style.setProperty('--dur',`${dur}s`);
-    document.body.appendChild(img);
-    img.addEventListener('animationend',()=>img.remove());
-  };
-  const hatLoop=()=>{createHat();setTimeout(hatLoop,(30+Math.random()*15)*1000);}
-  hatLoop();
+/* ---------- Instagram Fetch ---------- */
+fetch('/api/insta').then(r=>r.json()).then(({data})=>{
+	if(!Array.isArray(data)||!data.length)throw 0;
+	const grid=$('#instaGrid');
+	data.slice(0,12).forEach(item=>{
+		const a=document.createElement('a');
+		a.href=item.permalink;a.target='_blank';a.rel='noopener';
+		if(item.is_video){
+			const v=document.createElement('video');
+			v.src=item.thumb||item.url;v.muted=true;v.playsInline=true;v.autoplay=false;
+			a.appendChild(v);
+		}else{
+			const img=document.createElement('img');
+			img.src=item.thumb||item.url;img.alt=item.caption||'Instagram image';
+			a.appendChild(img);
+		}
+		grid.appendChild(a);
+	});
+}).catch(()=>$('#instaFallback').style.display='block');
+
+/* ---------- Audio Player ---------- */
+const playlist=[
+	{src:'/music/track1.mp3',artist:'',title:'Track 1'},
+	{src:'/music/track2.mp3',artist:'',title:'Track 2'},
+	{src:'/music/track3.mp3',artist:'',title:'Track 3'}
+];
+let current=Math.floor(Math.random()*playlist.length);
+const audio=$('#audio'),playBtn=$('#playPause'),prevBtn=$('#prev'),nextBtn=$('#next'),label=$('#trackLabel'),vol=$('#volume');
+function load(i){
+	current=(i+playlist.length)%playlist.length;
+	const track=playlist[current];
+	audio.src=track.src;
+	label.textContent=`${track.artist?track.artist+' – ':''}${track.title}`;
+}
+function play(){audio.play();playBtn.textContent='❚❚';playBtn.dataset.state='playing'}
+function pause(){audio.pause();playBtn.textContent='▷';playBtn.dataset.state='paused'}
+playBtn.addEventListener('click',()=>playBtn.dataset.state==='paused'?play():pause());
+prevBtn.addEventListener('click',()=>{load(current-1);play()});
+nextBtn.addEventListener('click',()=>{load(current+1);play()});
+audio.addEventListener('ended',()=>{load(current+1);play()});
+vol.addEventListener('input',e=>audio.volume=e.target.value);
+load(current);
+
+/* ---------- Floating Hats ---------- */
+const hatImgs=['white','pink','blue','green','red'].map(c=>`/images/${c}.png`);
+function spawnHat(){
+	const img=document.createElement('img');
+	img.src=hatImgs[Math.floor(Math.random()*hatImgs.length)];
+	img.className='floater';
+	img.style.setProperty('--rot',`${Math.random()>0.5?'' : '-'}${30+Math.random()*60}deg`);
+	img.style.setProperty('--dur',`${10+Math.random()*10}s`);
+	img.style.setProperty('--randY',`${Math.random()*60}vh`);
+	document.body.appendChild(img);
+	img.addEventListener('animationend',()=>img.remove());
+}
+setInterval(spawnHat,30000+Math.random()*15000);
 })();
 </script>
-
 </body>
 </html>
