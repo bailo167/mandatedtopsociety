@@ -3,17 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Try On – Mandated Top Society</title>
+<title>Try On – Mandated Top Society</title>
 <link rel="icon" href="/images/mainlogo.png" type="image/png">
 
-<!-- 3‑D viewer (Google model‑viewer) -->
+<!-- Google <model‑viewer> for Web | AR | VR -->
 <script type="module"
-  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
 :root{--bg:#fafafa;--text:#1f1f1f;--accent:#5EC3FF;--bg-alt:#ffffff;}
 html[data-theme="dark"]{--bg:#1A1A1A;--text:#e5e5e5;--accent:#4FA4D9;--bg-alt:#2b2b2b;}
-
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
 
@@ -27,7 +26,8 @@ header{
   border:1px solid var(--accent);background:none;padding:.35rem .7rem;border-radius:4px;
   color:var(--text);cursor:pointer;white-space:nowrap
 }
-main{padding:96px 1rem 120px;max-width:900px;margin:auto;text-align:center}
+
+main{padding:96px 1rem 96px;max-width:900px;margin:auto;text-align:center}
 h1{font-size:2.3rem;margin-bottom:1rem}
 
 model-viewer{
@@ -51,19 +51,22 @@ model-viewer{
 </header>
 
 <main>
-  <h1>Try On Our Bucket Hat</h1>
+  <h1>Try On Our Bucket Hat</h1>
 
-  <!-- 3‑D model with AR/VR support -->
+  <!-- 3‑D model — GLB for Android / desktop, USDZ for iOS Quick Look -->
   <model-viewer
       src="/models/whitebuckethat.glb"
+      ios-src="/models/whitebuckethat.usdz"
       alt="MTS Bucket Hat"
       camera-controls
       auto-rotate
       ar
-      ar-modes="webxr scene-viewer quick-look">
+      ar-modes="webxr scene-viewer quick-look"
+      exposure="1"
+      shadow-intensity="1">
   </model-viewer>
 
-  <p><a href="https://mandatedtopsociety.com/products" style="color:var(--accent);text-decoration:none;font-weight:600">← Back to Products</a></p>
+  <p><a href="/products" style="color:var(--accent);text-decoration:none;font-weight:600">← Back to Products</a></p>
 </main>
 
 <!-- minimal audio player -->
@@ -77,15 +80,15 @@ model-viewer{
 <audio id="audio" preload="none"></audio>
 
 <script>
-(()=>{ // no libraries, only vanilla JS
+(()=>{ // vanilla JS only
 const $=s=>document.querySelector(s);
 
-/* dark/light toggle */
+/* theme toggle */
 const root=document.documentElement;
 root.dataset.theme=localStorage.getItem('mts-theme')||'light';
 $('#modeToggle').onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=t;localStorage.setItem('mts-theme',t);};
 
-/* tiny audio player (3 local MP3s) */
+/* tiny audio player */
 const playlist=[
   {src:'/music/track1.mp3',title:'Track 1'},
   {src:'/music/track2.mp3',title:'Track 2'},
@@ -93,7 +96,7 @@ const playlist=[
 ];
 let current=0;
 const audio=$('#audio'),label=$('#trackLabel');
-function load(idx){current=(idx+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
+function load(i){current=(i+playlist.length)%playlist.length;audio.src=playlist[current].src;label.textContent=playlist[current].title;}
 load(0);
 $('#playPause').onclick=()=>{if(audio.paused){audio.play();event.target.textContent='❚❚';}else{audio.pause();event.target.textContent='▷';}};
 $('#prev').onclick=()=>{load(current-1);audio.play();$('#playPause').textContent='❚❚';};
